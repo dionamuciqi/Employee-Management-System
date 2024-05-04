@@ -6,13 +6,12 @@ const con = mysql.createConnection({
     password: "",
     database: "employeems"
 })
-
 con.connect(function(err) {
     if(err) {
         console.log("connection error")
     } else {
         console.log("Connected")
-    }
+    } 
 })
 
 export default con;

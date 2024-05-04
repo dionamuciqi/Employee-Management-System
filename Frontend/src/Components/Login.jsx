@@ -8,6 +8,7 @@ const Login = () => {
     email: '',
     password: ''
 })
+
 const [error, setError] = useState(null)
 const navigate = useNavigate()
 axios.defaults.withCredentials = true;
@@ -19,12 +20,10 @@ const handleSubmit = (event) => {
       navigate('/dashboard')    
     } else{
       setError(result.data.Error)
-
     }
   })
   .catch(err => console.log(err))
 }
-
 
   return (
     <div className='d-flex justify-content-center align-items-center vh-100 loginPage'>
