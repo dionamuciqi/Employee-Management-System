@@ -15,13 +15,20 @@ The Employee Management System provides basic functionalities for managing emplo
 
 ## Installation
 
-1. Clone the repository: git clone https://github.com/your-username/Employee-Management-System.git
+1. Clone the repository: git clone https://github.com/dionamuciqi/Employee-Management-System.git
 2. Install frontend dependencies:
     cd frontend
     npm install
 3. Install backend dependencies:
     cd ../backend
      npm install
+
+   ## Project Status
+
+This project is currently ongoing. We are continuously adding new features and improvements. 
+
+
+
    
 
 
