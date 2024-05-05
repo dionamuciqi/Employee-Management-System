@@ -1,7 +1,8 @@
 // eslint-disable-next-line no-unused-vars
 import React from 'react';
-import { useEffect, useState} from 'react'
-import axios from 'axios'
+import { useEffect, useState} from 'react';
+import axios from 'axios';
+import { useNavigate } from "react-router-dom";
 
 const AddEmployee = () => {
     const [employee, setEmployee] = useState({
@@ -14,6 +15,7 @@ const AddEmployee = () => {
         image: ""
     })
     const [category, setCategory] = useState([])
+    const navigate = useNavigate()
 
     useEffect(() => {
         axios.get('http://localhost:3000/auth/category')
@@ -27,8 +29,24 @@ const AddEmployee = () => {
     }, [])
     const handleSubmit = (e) => {
         e.preventDefault()
-        axios.post('http://localhost:3000/auth/add_employee', employee)
-        .then(result => console.log(result.data))
+        const formData = new FormData();
+        formData.append('name' , employee.name);
+        formData.append('email', employee.email);
+        formData.append('password', employee.password);
+        formData.append('address', employee.address);
+        formData.append('salary', employee.salary);
+        formData.append('image', employee.image);
+        formData.append('category_id', employee.category_id);
+
+
+        axios.post('http://localhost:3000/auth/add_employee', formData)
+        .then(result => {
+            if(result.data.Status) {
+                navigate('/dashboard/employee')
+            } else {
+                alert(result.data.Error)
+            }
+        })
         .catch(err => console.log(err))
       }
     return (
@@ -127,6 +145,7 @@ const AddEmployee = () => {
               type="file"
               className="form-control rounded-0"
               id="inputGroupFile01"
+              name="image"
               onChange={(e) =>
                 setEmployee({...employee, image: e.target.files[0]})
               }
