@@ -9,6 +9,8 @@ import Category from './Components/Category'
 import Profile from './Components/Profile'
 import AddCategory from './Components/AddCategory'
 import AddEmployee from './Components/AddEmployee'
+import EditEmployee from './Components/EditEmployee'
+
 
 function App() {
   return (
