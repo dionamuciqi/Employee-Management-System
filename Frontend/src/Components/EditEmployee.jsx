@@ -12,7 +12,7 @@ const EditEmployee = () => {
         category_id: "",
     });
     const [category, setCategory] = useState([])
-
+    const navigate = useNavigate()
     useEffect(() => {
         axios.get('http://localhost:3000/auth/category')
         .then(result => {
@@ -30,7 +30,8 @@ const EditEmployee = () => {
                 name: result.data.Result[0].name,
                 email: res.data.Result[0].email,
 				address: res.data.Result[0].address,
-				salary: res.data.Result[0].salary
+				salary: res.data.Result[0].salary,
+                category_id: res.data.Result[0].category_id,
 			
             })
         }).catch(err => console.log(err))
@@ -40,7 +41,11 @@ const EditEmployee = () => {
         e.preventDefault()
         axios.put('http://localhost:3000/auth/edit_employee/'+id, employee)
         .then(result => {
-            console.log(result.data)
+            if(result.data.Status){
+                 navigate('/dashboard/employee')
+            }else{
+                alert(result.data.Error)
+            }
         }).catch(err => console.log(err))
     }
 
