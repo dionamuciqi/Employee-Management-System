@@ -6,18 +6,32 @@ const Home = () => {
     const [adminTotal, setAdminTotal] = useState(0)
     const [employeeTotal, setEmployeeTotal] = useState(0)
     const [salaryTotal, setSalaryTotal] = useState(0)
+    const [admins, setAdmins] = useState([])
 
     useEffect(()=> {
         adminCount();
         employeeCount();
         salaryCount();
+        AdminRecords();
     }, [])
+
+    const AdminRecords = () => {
+        axios.get('http://localhost:3000/auth/admin_records')
+        .then(result => {
+            if(result.data.Status) {
+                setAdmins(result.data.Result)
+            }else{
+                alert(result.data.Error)
+            }
+        })
+    }
 
     const adminCount = () => {
         axios.get('http://localhost:3000/auth/admin_count')
         .then(result => {
+            debugger;
             if(result.data.Status) {
-                setAdminTotal(result.data.Result[0].admin)
+                setAdminTotal(result.data.Result.count())
             }
         })
     }
@@ -74,9 +88,39 @@ return (
                 </div>
             </div>
         </div>
+        <div className='mt-4 px-5 pt-3'>
+            <h3>List of Admins</h3>    
+            <table className='table'>
+                <thead>
+                    <tr>
+                        <th>Email</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {
+                        admins.map(a => (
+                            <tr key={a.id}>
+                                <td>{a.email}</td>
+                                <td>
+                                <button
+                                  className="btn btn-info btn-sm me-2"> 
+                                  Edit 
+                                </button>
+                                <button 
+                                  className="btn btn-warning btn-sm">
+                                  Delete 
+                                </button>
+                                </td>
+                            </tr>
+                        ))
+
+                    }
+                </tbody>
+            </table>
+        </div>
     </div>
 )
-
 }
 
 export default Home
