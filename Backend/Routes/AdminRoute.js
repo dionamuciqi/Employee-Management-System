@@ -110,7 +110,7 @@ router.put('/edit_employee/:id', (req, res) => {
         req.body.category_id
     ]
     con.query(sql,[...values, id], (err, result) => {
-        if(err) return res.json({Status: false, Error: "Query Error"+err})
+        if(err) return res.json({Status: false, Error: "Query Error" + err})
         return res.json({Status: true, Result: result})
     })
 })
@@ -119,7 +119,7 @@ router.delete('/delete_employee/:id', (req, res) => {
     const id = req.params.id;
     const sql = "delete from employee where id = ?"
     con.query(sql,[id], (err, result) => {
-        if(err) return res.json({Status: false, Error: "Query Error"+err})
+        if(err) return res.json({Status: false, Error: "Query Error" + err})
         return res.json({Status: true, Result: result})
     })
 })
@@ -127,7 +127,7 @@ router.delete('/delete_employee/:id', (req, res) => {
 router.get('/admin_count', (req, res) => {
     const sql = "SELECT count(id) as admin FROM admin";
     con.query(sql, (err, result) => {
-        if(err) return res.json({Status: false, Error: "Query Error"+err})
+        if(err) return res.json({Status: false, Error: "Query Error" + err})
         return res.json({Status: true, Result: result})
     })
 })
@@ -135,7 +135,7 @@ router.get('/admin_count', (req, res) => {
 router.get('/employee_count', (req, res) => {
     const sql = "SELECT count(id) as employee FROM employee";
     con.query(sql, (err, result) => {
-        if(err) return res.json({Status: false, Error: "Query Error"+err})
+        if(err) return res.json({Status: false, Error: "Query Error" + err})
         return res.json({Status: true, Result: result})
     })
 })
@@ -143,7 +143,15 @@ router.get('/employee_count', (req, res) => {
 router.get('/salary_count', (req, res) => {
     const sql = "SELECT sum(salary) as salary FROM employee";
     con.query(sql, (err, result) => {
-        if(err) return res.json({Status: false, Error: "Query Error"+err})
+        if(err) return res.json({Status: false, Error: "Query Error" + err})
+        return res.json({Status: true, Result: result})
+    })
+})
+
+router.get('/admin_records', (req, res) => {
+    const sql = "SELECT * FROM admin"
+    con.query(sql, (err, result) => {
+        if(err) return res.json({Status: false, Error: "Query Error" + err})
         return res.json({Status: true, Result: result})
     })
 })
