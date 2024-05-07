@@ -1,6 +1,7 @@
 import axios from 'axios'
 import React, { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
+import { Link, useNavigate } from "react-router-dom";
 
 const EditEmployee = () => {
     const {id} = useParams()
@@ -28,10 +29,10 @@ const EditEmployee = () => {
             setEmployee({
                 ...employee,
                 name: result.data.Result[0].name,
-                email: res.data.Result[0].email,
-				address: res.data.Result[0].address,
-				salary: res.data.Result[0].salary,
-                category_id: res.data.Result[0].category_id,
+                email: result.data.Result[0].email,
+				address: result.data.Result[0].address,
+				salary: result.data.Result[0].salary,
+                category_id: result.data.Result[0].category_id,
 			
             })
         }).catch(err => console.log(err))
