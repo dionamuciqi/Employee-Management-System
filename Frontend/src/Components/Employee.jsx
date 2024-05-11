@@ -1,5 +1,5 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const Employee = () => {
@@ -50,7 +50,7 @@ const Employee = () => {
             <tbody>
                {
                employee.map(e => (
-              <tr>
+              <tr key={e.id}>
               <td>{e.name}</td>
               <td>
                 <img src={`http://localhost:3000/Images/` + e.image} className="employee_image"></img></td>
