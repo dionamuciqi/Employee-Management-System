@@ -21,7 +21,7 @@ router.post('/employee_login', (req, res) => {
                         { expiresIn: "1d" }
                     );
                     res.cookie('token', token)
-                    return res.json({ loginStatus: true });
+                    return res.json({ loginStatus: true , id: result[0].id });
                 }
 
             })
@@ -32,5 +32,14 @@ router.post('/employee_login', (req, res) => {
         }
     });
 });
+
+router.get('/detail/:id' , (req, res) => {
+    const id = req.params.id;
+    const sql = "SELECT * FROM employee where id = ? "
+    con.query(sql, [id] , (err, result) => {
+        if(err) return res.json({Status:false});
+        return res.json(result)
+    })
+})
 
 export { router as EmployeeRouter}
