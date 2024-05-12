@@ -13,6 +13,7 @@ import EditEmployee from './Components/EditEmployee'
 import Start from './Components/Start'
 import EmployeeLogin from './Components/EmployeeLogin'
 import EmployeeDetail from './Components/EmployeeDetail'
+import PrivateRoute from './Components/PrivateRoute'
 
 
 function App() {
@@ -23,7 +24,10 @@ function App() {
           <Route path='/adminlogin' element={<Login />}></Route>
           <Route path='/employee_login' element={<EmployeeLogin />}></Route>
           <Route path='/employee_detail/:id' element={<EmployeeDetail />}></Route>
-          <Route path='/dashboard' element={<Dashboard />}>
+          <Route path='/dashboard' element={
+          <PrivateRoute>
+            <Dashboard />
+          </PrivateRoute>}>
           <Route path='' element={<Home />}></Route>
           <Route path='/dashboard/employee' element={<Employee />}></Route>
           <Route path='/dashboard/category' element={<Category />}></Route>

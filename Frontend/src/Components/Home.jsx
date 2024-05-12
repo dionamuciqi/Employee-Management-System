@@ -1,6 +1,5 @@
-// eslint-disable-next-line no-unused-vars
 import axios from 'axios'
-import React, { useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 const Home = () => {
     const [adminTotal, setAdminTotal] = useState(0)
@@ -29,9 +28,8 @@ const Home = () => {
     const adminCount = () => {
         axios.get('http://localhost:3000/auth/admin_count')
         .then(result => {
-            debugger;
             if(result.data.Status) {
-                setAdminTotal(result.data.Result.count())
+                setAdminTotal(result.data.Result[0].admin)
             }
         })
     }
