@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 useEffect
 
+
 const Start = () => {
     const navigate = useNavigate()
   axios.defaults.withCredentials = true;
