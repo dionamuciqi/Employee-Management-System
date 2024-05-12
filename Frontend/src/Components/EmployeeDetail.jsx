@@ -18,7 +18,7 @@ const EmployeeDetail = () => {
         axios.get('http://localhost:3000/employee/logout')
         .then(result => {
           if(result.data.Status) {
-            navigate('/start')
+            navigate('/')
           }
         }).catch(err => console.log(err))
       }
