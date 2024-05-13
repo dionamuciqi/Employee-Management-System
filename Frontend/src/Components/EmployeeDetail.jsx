@@ -13,11 +13,12 @@ const EmployeeDetail = () => {
             setEmployee(result.data[0])
         })
         .catch(err => console.log(err))
-    }, [])
+    }, [id])
     const handleLogout = () => {
         axios.get('http://localhost:3000/employee/logout')
         .then(result => {
           if(result.data.Status) {
+            localStorage.removeItem("valid")
             navigate('/')
           }
         }).catch(err => console.log(err))

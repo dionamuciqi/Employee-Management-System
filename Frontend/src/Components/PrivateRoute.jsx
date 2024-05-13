@@ -10,5 +10,6 @@ const PrivateRoute = ({children}) => {
 PrivateRoute.propTypes = {
     children: PropTypes.node.isRequired // Ensure 'children' is provided and is a React node
   };
-  
+ 
+ 
 export default PrivateRoute
