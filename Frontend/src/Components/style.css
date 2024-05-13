@@ -7,8 +7,11 @@
 }
 
 .loginForm {
-    background-color: rgba(1, 32, 93, 0.6);
+    background-color: rgba(10, 10, 10, 0.5);
     color: white;
+}
+.textlogin {
+    text-align: center;
 }
 ul li :hover {
     background-color: gray;
@@ -25,3 +28,30 @@ ul li :hover {
     height: 300px;
     border-radius: 50%;
 }
+.custom-btn {
+    border-radius: 10px;
+    font-size: 18px;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.custom-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+}
+.backButton {
+    color: white;
+    background-color: black;
+    border-color: black;
+  }
+  .backButton:hover {
+    background-color: rgba(143, 141, 141, 0.5);
+    border-color: black;
+  }
+  .forgot-password-link {
+    display: block;
+    margin-top: 10px; 
+    text-decoration: underline;
+    text-align: center;
+    color: #007bff; 
+  }
