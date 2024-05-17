@@ -54,7 +54,7 @@ const Dashboard = () => {
               </li>
               <li className="w-100">
                 <Link
-                  to="/dashboard/departments"
+                  to="/dashboard/managedepartments"
                   className="nav-link px-0 align-middle text-white"
                 >
                   <i className="fs-4 bi-diagram-2 ms-2"></i>
@@ -65,7 +65,7 @@ const Dashboard = () => {
               </li>
               <li className="w-100">
                 <Link
-                  to="/dashboard/attendance"
+                  to="/dashboard/attendancemanagement"
                   className="nav-link px-0 align-middle text-white"
                 >
                   <i className="fs-4 bi-clock ms-2"></i>
@@ -76,7 +76,7 @@ const Dashboard = () => {
               </li>
               <li className="w-100">
                 <Link
-                  to="/dashboard/leave"
+                  to="/dashboard/leavemanagement"
                   className="nav-link px-0 align-middle text-white"
                 >
                   <i className="fs-4 bi-calendar3 ms-2"></i>
@@ -85,7 +85,7 @@ const Dashboard = () => {
               </li>
               <li className="w-100">
                 <Link
-                  to="/dashboard/payroll"
+                  to="/dashboard/payrollmanagement"
                   className="nav-link px-0 align-middle text-white"
                 >
                   <i className="fs-4 bi-currency-dollar ms-2"></i>
@@ -96,12 +96,12 @@ const Dashboard = () => {
               </li>
               <li className="w-100">
                 <Link
-                  to="/dashboard/notifications"
+                  to="/dashboard/notificationsandannouncements"
                   className="nav-link px-0 align-middle text-white"
                 >
                   <i className="fs-4 bi-bell ms-2"></i>
                   <span className="ms-2 d-none d-sm-inline">
-                    Notifications and Announcements
+                    Notifications & Announcements
                   </span>
                 </Link>
               </li>

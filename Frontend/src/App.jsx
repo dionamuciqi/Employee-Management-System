@@ -14,6 +14,11 @@ import Start from './Components/Start'
 import EmployeeLogin from './Components/EmployeeLogin'
 import EmployeeDashboard from './Components/EmployeeDashboard'
 import PrivateRoute from './Components/PrivateRoute'
+import ManageDepartments from './Components/ManageDepartments'
+import AttendanceManagement from './Components/AttendanceManagement'
+import LeaveManagement from './Components/LeaveManagement'
+import PayrollManagement from './Components/PayrollManagement'
+import NotificationsAndAnnouncements from './Components/NotificationsandAnnouncements'
 
 function App() {
   return (
@@ -33,6 +38,11 @@ function App() {
           </PrivateRoute>}>
           <Route path='' element={<Home />}></Route>
           <Route path='/dashboard/employee' element={<Employee />}></Route>
+          <Route path='/dashboard/managedepartments' element={<ManageDepartments />}></Route>
+          <Route path='/dashboard/attendancemanagement' element={<AttendanceManagement />}></Route>
+          <Route path='/dashboard/payrollmanagement' element={<PayrollManagement />}></Route>
+          <Route path='/dashboard/leavemanagement' element={<LeaveManagement />}></Route>
+          <Route path='/dashboard/notificationsandannouncements' element={<NotificationsAndAnnouncements />}></Route>
           <Route path='/dashboard/category' element={<Category />}></Route>
           <Route path='/dashboard/profile' element={<Profile />}></Route>
           <Route path='/dashboard/add_category' element={<AddCategory />}></Route>
