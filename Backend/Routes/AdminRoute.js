@@ -42,6 +42,21 @@ router.post('/add_category', (req, res) => {
     })
 })
 
+router.get('/department', (req, res) => {
+    const sql = "SELECT * FROM department";
+    con.query(sql, (err, result) => {
+        if(err) return res.json({Status: false, Error: "Query Error"})
+            return res.json({Status: true, Result: result})
+    })
+})
+
+router.post('/add_department', (req, res) => {
+    const sql = "INSERT INTO department (name) VALUES (?)"
+    con.query(sql, [req.body.department], (err, result) => {
+        if(err) return res.json({Status: false, Error: "Query Error"})
+        return res.json({Status: true})
+    })
+})
 
 // image upload 
 const storage = multer.diskStorage({
@@ -148,6 +163,7 @@ router.get('/salary_count', (req, res) => {
     })
 })
 
+
 router.get('/admin_records', (req, res) => {
     const sql = "SELECT * FROM admin"
     con.query(sql, (err, result) => {
@@ -155,6 +171,78 @@ router.get('/admin_records', (req, res) => {
         return res.json({Status: true, Result: result})
     })
 })
+
+
+router.post('/add_trainers', (req, res) => {
+    const sql = `INSERT INTO trainers 
+    (name , qualification , email , address , department_id) 
+    VALUES (?)`;
+
+        const values = [
+            req.body.name,
+            req.body.qualification,
+            req.body.email,
+            req.body.address,
+            req.body.department_id
+        ]
+        con.query(sql, [values], (err, result) => {
+            if(err) return res.json({Status: false, Error: err})
+            return res.json({Status: true})
+        })
+    })
+
+router.get('/trainers', (req, res) => {
+    const sql = "SELECT * FROM trainers";
+    con.query(sql, (err, result) => {
+        if(err) return res.json({Status: false, Error: "Query Error"})
+            return res.json({Status: true, Result: result})
+    })
+})
+
+router.get('/trainers/:id', (req, res) => {
+    const id = req.params.id;
+    const sql = "SELECT * FROM trainers WHERE id = ?";
+    con.query(sql,[id], (err, result) => {
+        if(err) return res.json({Status: false, Error: "Query Error"})
+            return res.json({Status: true, Result: result})
+})
+})
+
+router.put('/edit_trainers/:id', (req, res) => {
+    const id = req.params.id;
+    const sql = `UPDATE trainers 
+        set name = ?, qualification = ?, email = ?, address = ?, department_id = ? 
+        Where id = ?`
+    const values = [
+        req.body.name,
+        req.body.qualification,
+        req.body.email,
+        req.body.address,
+        req.body.department_id
+    ]
+    con.query(sql,[...values, id], (err, result) => {
+        if(err) return res.json({Status: false, Error: "Query Error" + err})
+        return res.json({Status: true, Result: result})
+    })
+})
+
+router.delete('/delete_trainers/:id', (req, res) => {
+    const id = req.params.id;
+    const sql = "delete from trainers where id = ?"
+    con.query(sql,[id], (err, result) => {
+        if(err) return res.json({Status: false, Error: "Query Error" + err})
+        return res.json({Status: true, Result: result})
+    })
+})
+
+
+router.get('/department', (req, res) => {
+    const sql = "SELECT * FROM department";
+    con.query(sql, (err, result) => {
+        if (err) return res.json({ Status: false, Error: "Query Error" });
+        return res.json({ Status: true, Result: result });
+    });
+});
 
 router.get('/logout', (req, res) => {
     res.clearCookie('token')
