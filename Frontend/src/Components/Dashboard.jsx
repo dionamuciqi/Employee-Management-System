@@ -54,15 +54,24 @@ const Dashboard = () => {
               </li>
               <li className="w-100">
                 <Link
-                  to="/dashboard/managedepartments"
+                  to="/dashboard/trainers"
                   className="nav-link px-0 align-middle text-white"
                 >
                   <i className="fs-4 bi-diagram-2 ms-2"></i>
                   <span className="ms-2 d-none d-sm-inline">
-                    Manage Departments
+                    Manage Trainers
                   </span>
                 </Link>
               </li>
+              <li className="w-100">
+  <Link
+    to="/dashboard/department"
+    className="nav-link px-0 align-middle text-white"
+  >
+    <i className="fs-4 bi-briefcase ms-2"></i>
+    <span className="ms-2 d-none d-sm-inline">Department</span>
+  </Link>
+</li>
               <li className="w-100">
                 <Link
                   to="/dashboard/attendancemanagement"
