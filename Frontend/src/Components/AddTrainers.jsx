@@ -1,27 +1,41 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
-import { useNavigate } from "react-router-dom";
+import { useNavigate } from 'react-router-dom';
 
 const AddTrainers = () => {
     const [trainers, setTrainers] = useState({
-        name: "",
-        qualification: "",
-        email: "",
-        address: "",
-        department_id: "",
+        name: '',
+        qualification: '',
+        email: '',
+        address: '',
+        department_id: '',
+        training_mode: '',
+        employee_id: '',
     });
     const [department, setDepartment] = useState([]);
+    const [employees, setEmployees] = useState([]);
     const navigate = useNavigate();
 
     useEffect(() => {
         axios.get('http://localhost:3000/auth/department')
-        .then(result => {
-            if (result.data.Status) {
-                setDepartment(result.data.Result);
-            } else {
-                alert(result.data.Error);
-            }
-        }).catch(err => console.log(err));
+            .then(result => {
+                if (result.data.Status) {
+                    setDepartment(result.data.Result);
+                } else {
+                    alert(result.data.Error);
+                }
+            })
+            .catch(err => console.log(err));
+
+        axios.get('http://localhost:3000/auth/employee')
+            .then(result => {
+                if (result.data.Status) {
+                    setEmployees(result.data.Result);
+                } else {
+                    alert(result.data.Error);
+                }
+            })
+            .catch(err => console.log(err));
     }, []);
 
     const handleChange = (e) => {
@@ -34,18 +48,16 @@ const AddTrainers = () => {
 
     const handleSubmit = (e) => {
         e.preventDefault();
-        console.log('Data being sent:', trainers); // Add this to see the data being sent
-
         axios.post('http://localhost:3000/auth/add_trainers', trainers)
-        .then(result => {
-            console.log('Response from server:', result.data); // Add this to see the response from the server
-            if (result.data.Status) {
-                navigate('/dashboard/trainers');
-            } else {
-                alert(result.data.Error);
-            }
-        })
-        .catch(err => console.log('Error:', err));
+            .then(result => {
+                if (result.data.Status) {
+                    // Rifresko listën e trajnerëve në komponentin Trainers
+                    navigate('/dashboard/trainers');
+                } else {
+                    alert(result.data.Error);
+                }
+            })
+            .catch(err => console.log(err));
     };
 
     return (
@@ -110,6 +122,34 @@ const AddTrainers = () => {
                             <option value="">Select Department</option>
                             {department.map((c) => (
                                 <option key={c.id} value={c.id}>{c.name}</option>
+                            ))}
+                        </select>
+                    </div>
+                    <div className="col-12">
+                        <label htmlFor="trainingMode" className="form-label">Training Mode</label>
+                        <select
+                            name="training_mode"
+                            id="trainingMode"
+                            className="form-select"
+                            onChange={handleChange}
+                        >
+                            <option value="">Select Training Mode</option>
+                            <option value="physical">Physical</option>
+                            <option value="online">Online</option>
+                            <option value="physical&online">Physical & Online</option>
+                        </select>
+                    </div>
+                    <div className="col-12">
+                        <label htmlFor="employee" className="form-label">Employee</label>
+                        <select
+                            name="employee_id"
+                            id="employee"
+                            className="form-select"
+                            onChange={handleChange}
+                        >
+                            <option value="">Select Employee</option>
+                            {employees.map(e => (
+                                <option key={e.id} value={e.id}>{e.name}</option>
                             ))}
                         </select>
                     </div>

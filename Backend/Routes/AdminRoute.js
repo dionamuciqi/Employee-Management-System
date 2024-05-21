@@ -244,6 +244,82 @@ router.get('/department', (req, res) => {
     });
 });
 
+router.get('/employee_trainers/:employee_id', (req, res) => {
+    const { employee_id } = req.params;
+    const sql = `
+        SELECT trainers.* FROM trainers
+        JOIN employee_trainers ON trainers.id = employee_trainers.trainer_id
+        WHERE employee_trainers.employee_id = ?
+    `;
+    con.query(sql, [employee_id], (err, result) => {
+        if (err) return res.json({ Status: false, Error: "Query Error" });
+        return res.json({ Status: true, Result: result });
+    });
+});
+
+router.get('/employee/trainings', (req, res) => {
+    const employeeId = req.user.id; // Assuming you have user info in the request object
+    const sql = "SELECT * FROM trainings WHERE employee_id = ?";
+    con.query(sql, [employeeId], (err, result) => {
+        if (err) return res.json({ Status: false, Error: "Query Error" });
+        return res.json({ Status: true, Result: result });
+    });
+});
+
+router.get('/employee_trainers/:employee_id', (req, res) => {
+    const { employee_id } = req.params;
+    const sql = `
+        SELECT trainers.* FROM trainers
+        JOIN employees ON trainers.employee_id = employees.id
+        WHERE employees.id = ?
+    `;
+    con.query(sql, [employee_id], (err, result) => {
+        if (err) return res.json({ Status: false, Error: "Query Error" });
+        return res.json({ Status: true, Result: result });
+    });
+});
+router.get('/employee/trainings', (req, res) => {
+    const employeeId = req.user.id; // Assuming req.user.id is the employee ID from the token
+    const sql = `
+        SELECT trainings.* FROM trainings
+        JOIN employee_trainings ON trainings.id = employee_trainings.training_id
+        WHERE employee_trainings.employee_id = ?
+    `;
+    con.query(sql, [employeeId], (err, result) => {
+        if (err) return res.json({ Status: false, Error: "Query Error" });
+        return res.json({ Status: true, Result: result });
+    });
+});
+
+// Get trainers for a specific employee
+router.get('/employee_trainers/:employee_id', (req, res) => {
+    const { employee_id } = req.params;
+    const sql = `
+        SELECT trainers.* FROM trainers
+        JOIN employee_trainers ON trainers.id = employee_trainers.trainer_id
+        WHERE employee_trainers.employee_id = ?
+    `;
+    con.query(sql, [employee_id], (err, result) => {
+        if (err) return res.json({ Status: false, Error: "Query Error" });
+        return res.json({ Status: true, Result: result });
+    });
+});
+
+// Endpoint për të marrë trajnerët e specifikuar për një punëtor
+router.get('/employee_trainers/:employee_id', (req, res) => {
+    const { employee_id } = req.params;
+    const sql = `
+        SELECT trainers.* FROM trainers
+        JOIN employee_trainers ON trainers.id = employee_trainers.trainer_id
+        WHERE employee_trainers.employee_id = ?
+    `;
+    con.query(sql, [employee_id], (err, result) => {
+        if (err) return res.json({ Status: false, Error: "Query Error" });
+        return res.json({ Status: true, Result: result });
+    });
+});
+
+
 router.get('/logout', (req, res) => {
     res.clearCookie('token')
     return res.json({Status:true})
