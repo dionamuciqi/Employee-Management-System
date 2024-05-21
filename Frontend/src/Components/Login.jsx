@@ -1,35 +1,35 @@
-import { useState } from 'react'
-import './style.css'
-import axios from 'axios'
-import { useNavigate } from 'react-router-dom'
+import { useState } from 'react';
+import './style.css';
+import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const Login = () => {
-  
   const [values, setValues] = useState({
     email: '',
     password: ''
-  })
+  });
 
-  const [error, setError] = useState(null)
-  const navigate = useNavigate()
+  const [error, setError] = useState(null);
+  const navigate = useNavigate();
   axios.defaults.withCredentials = true;
+
   const handleSubmit = (event) => {
     event.preventDefault();
     axios.post('http://localhost:3000/auth/adminlogin', values)
       .then(result => {
         if (result.data.loginStatus) {
-          localStorage.setItem("valid", true)
-          navigate('/dashboard')
+          localStorage.setItem("valid", "true");
+          navigate('/dashboard', { replace: true });
         } else {
-          setError(result.data.Error)
+          setError(result.data.Error);
         }
       })
-      .catch(err => console.log(err))
-  }
+      .catch(err => console.log(err));
+  };
 
   const handleBackToStart = () => {
-    navigate('/') // Ndryshoni këtu për të kthyer në faqen fillestare
-  }
+    navigate('/');
+  };
 
   return (
     <div className='d-flex justify-content-center align-items-center vh-100 loginPage position-relative'>
@@ -57,7 +57,7 @@ const Login = () => {
         <a href="/ForgotPassword" className="forgot-password-link">Forgot your password?</a>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Login
+export default Login;

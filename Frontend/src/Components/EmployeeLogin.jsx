@@ -28,7 +28,7 @@ const EmployeeLogin = () => {
       }
     
     const handleBackToStart = () => {
-        navigate('/') // Change this to the path of your start page
+        navigate('/') 
       }
 
     return (

@@ -249,4 +249,42 @@ router.get('/logout', (req, res) => {
     return res.json({Status:true})
 })
 
+
+
+router.post('/announcements', (req, res) => {
+    const { announcement } = req.body;
+    const sql = 'INSERT INTO announcements (message) VALUES (?)';
+  
+    con.query(sql, [announcement], (err, result) => {
+      if (err) {
+        console.error('Error inserting announcement:', err);
+        return res.status(500).json({ success: false, error: 'Error inserting announcement' });
+      }
+      console.log('Announcement inserted successfully');
+      return res.json({ success: true, notification: { id: result.insertId, message: announcement } });
+    });
+  });
+   
+
+router.get('/notifications', (req, res) => {
+    const sql = 'SELECT * FROM announcements ORDER BY created_at DESC';
+    con.query(sql, (err, result) => {
+        if (err) {
+            return res.status(500).json({ success: false, error: 'Error fetching notifications' });
+        }
+        return res.json({ success: true, notifications: result });
+    });
+});
+router.delete('/clearnotifications', (req, res) => {
+    const sql = 'DELETE FROM notifications';
+    con.query(sql, (err, result) => {
+      if (err) {
+        console.error('Error clearing notifications:', err);
+        return res.status(500).json({ success: false, error: 'Error clearing notifications' });
+      }
+      console.log('Notifications cleared successfully!');
+      return res.json({ success: true, message: 'Notifications cleared successfully' });
+    });
+  });
+
 export { router as adminRouter };

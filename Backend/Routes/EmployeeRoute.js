@@ -55,5 +55,15 @@ router.get('/logout', (req, res) => {
     res.clearCookie('token')
     return res.json({Status: true})
 })
+router.get('/news/:id', (req, res) => {
+  const employeeId = req.params.id;
+  const sql = 'SELECT * FROM notifications WHERE employee_id = ? ORDER BY created_at DESC';
+  con.query(sql, [employeeId], (err, result) => {
+      if (err) {
+          return res.status(500).json({ success: false, error: 'Error fetching notifications' });
+      }
+      return res.json({ success: true, notifications: result });
+  });
+});
 
 export { router as EmployeeRouter}

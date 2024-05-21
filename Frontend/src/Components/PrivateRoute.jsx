@@ -1,15 +1,19 @@
-// eslint-disable-next-line no-unused-vars
-import React from 'react'
-import { Navigate } from 'react-router-dom'
+import { useEffect, useState } from 'react';
+import { Navigate, useLocation } from 'react-router-dom';
 import PropTypes from 'prop-types';
 
-const PrivateRoute = ({children}) => {
-  return localStorage.getItem("valid") ? children : <Navigate to="/"/>
-}
+const PrivateRoute = ({ children }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem("valid"));
+  const location = useLocation();
 
+  useEffect(() => {
+    setIsAuthenticated(!!localStorage.getItem("valid"));
+  }, [location]);
+
+  return isAuthenticated ? children : <Navigate to="/adminlogin" state={{ from: location }} replace /> ;
+};
 PrivateRoute.propTypes = {
-    children: PropTypes.node.isRequired // Ensure 'children' is provided and is a React node
-  };
- 
- 
-export default PrivateRoute
+  children: PropTypes.node.isRequired,
+};
+
+export default PrivateRoute;
