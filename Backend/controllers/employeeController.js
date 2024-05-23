@@ -1,141 +1,45 @@
-import asyncHandler from "express-async-handler";
-import Student from "../models/student.js";
-import Attendance from "../models/attendance.js";
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import Employee from '../models/employee.js';
 
-const addStudent = asyncHandler(async (req, res) => {
-  const {
-    name,
-    address,
-    category,
-    city,
-    contact,
-    fatherContact,
-    image,
-    roomNo,
-    blockNo,
-    status,
-  } = req.body;
-
-  const studentExist = await Student.findOne({ name: name });
-
-  if (studentExist) {
-    res.status(400);
-    throw new Error("Student already exists");
-  }
-
-  const student = await Student.create({
-    name,
-    address,
-    category,
-    city,
-    contact,
-    fatherContact,
-    image,
-    roomNo,
-    blockNo,
-    status,
-  });
-
-  if (student) {
-    res.status(201).json(student);
-  } else {
-    res.status(400);
-    throw new Error("Invalid Student data");
-  }
-});
-
-const updateStudentProfile = asyncHandler(async (req, res) => {
-  const student = await Student.findById(req.body._id);
-
-  if (student) {
-    student.name = req.body.name || student.name;
-    student.address = req.body.address || student.address;
-    student.category = req.body.category || student.category;
-    student.city = req.body.city || student.city;
-    student.contact = req.body.contact || student.contact;
-    student.fatherContact = req.body.fatherContact || student.fatherContact;
-    student.image = req.body.image || student.image;
-    student.roomNo = req.body.roomNo || student.roomNo;
-    student.blockNo = req.body.blockNo || student.blockNo;
-    student.status = req.body.status || student.status;
-
-    const updatedStudent = await student.save();
-
-    res.json(updatedStudent);
-  } else {
-    res.status(404);
-    throw new Error("Student not found");
-  }
-});
-
-const getAllStudents = asyncHandler(async (req, res) => {
-  const pageSize = 15;
-  const page = Number(req.query.pageNumber) || 1;
-
-  const keyword = req.query.keyword
-    ? {
-        name: {
-          $regex: req.query.keyword,
-          $options: "i",
-        },
+class employeeController {
+  static async login(req, res) {
+    try {
+      const { email, password } = req.body;
+      const employee = await Employee.getByEmail(email);
+      if (!employee) {
+        return res.json({ loginStatus: false, Error: "Wrong email or password" });
       }
-    : {};
-
-  const count = await Student.countDocuments({ ...keyword });
-  const students = await Student.find({ ...keyword })
-    .limit(pageSize)
-    .skip(pageSize * (page - 1));
-  if (students && students.length !== 0) {
-    res.json({ students, page, pages: Math.ceil(count / pageSize) });
-  } else {
-    res.status(404);
-    throw new Error("No Students Found");
+      const match = await bcrypt.compare(password, employee.password);
+      if (!match) {
+        return res.json({ loginStatus: false, Error: "Wrong password" });
+      }
+      const token = jwt.sign(
+        { role: "employee", email: employee.email, id: employee.id },
+        "jwt_secret_key",
+        { expiresIn: "1d" }
+      );
+      res.cookie('token', token)
+      return res.json({ loginStatus: true, id: employee.id });
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ loginStatus: false, Error: "Internal server error" });
+    }
   }
-});
 
-const deleteStudent = asyncHandler(async (req, res) => {
-  const student = await Student.findById(req.params.id);
-
-  if (student) {
-    await student.remove();
-    res.json({ message: "Student removed" });
-  } else {
-    res.status(404);
-    throw new Error("Student not found");
+  static async detail(req, res) {
+    try {
+      const { id } = req.params;
+      const employee = await Employee.getById(id);
+      if (!employee) {
+        return res.json({ Status: false });
+      }
+      return res.json(employee);
+    } catch (error) {
+      console.error(error);
+      return res.status(500).json({ Status: false, Error: "Internal server error" });
+    }
   }
-});
+}
 
-const getStudentById = asyncHandler(async (req, res) => {
-  const student = await Student.findById(req.params.id);
-  if (student) {
-    res.json(student);
-  } else {
-    res.status(404);
-    throw new Error("Student not found");
-  }
-});
-
-const getStudentByRoomNo = asyncHandler(async (req, res) => {
-  const attendance = await Attendance.findOne({
-    date: Date().toString().substring(0, 15),
-    roomNo: { $in: [req.params.roomId] },
-  });
-  const students = await Student.find({ roomNo: req.params.roomId });
-  if (students) {
-    attendance
-      ? res.json({ students: students, attendance: attendance })
-      : res.json({ students: students });
-  } else {
-    res.status(404);
-    throw new Error("Students not found");
-  }
-});
-
-export {
-  addStudent,
-  updateStudentProfile,
-  getAllStudents,
-  deleteStudent,
-  getStudentById,
-  getStudentByRoomNo,
-};
+export default employeeController;

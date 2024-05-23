@@ -1,53 +1,31 @@
-import Sequelize from 'sequelize';
+import con from '../utils/db.js';
 
-const sequelize = new Sequelize('employeems', 'root', '', {
-  host: 'localhost',
-  dialect: 'mysql',
-});
-
-const Employee = sequelize.define('Employee', {
-  name: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  address: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  category: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  city: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  contact: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  fatherContact: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  image: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  roomNo: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  blockNo: {
-    type: Sequelize.STRING,
-    allowNull: false,
-  },
-  status: {
-    type: Sequelize.STRING,
-    allowNull: false,
+class employee {
+  static async getByEmail(email) {
+    return new Promise((resolve, reject) => {
+      const sql = "SELECT * FROM employee WHERE email = ?";
+      con.query(sql, [email], (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result[0]);
+        }
+      });
+    });
   }
-}, {
-  timestamps: true,
-});
 
-export default Employee;
+  static async getById(id) {
+    return new Promise((resolve, reject) => {
+      const sql = "SELECT * FROM employee WHERE id = ?";
+      con.query(sql, [id], (err, result) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(result[0]);
+        }
+      });
+    });
+  }
+}
+
+export default employee;

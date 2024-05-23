@@ -1,38 +1,38 @@
 import { useState } from 'react'
-import './style.css'
+import '../style.css'
 import axios from 'axios'
 import { useNavigate } from 'react-router-dom'
 
-const EmployeeLogin = () => {
+const Login = () => {
+  
+  const [values, setValues] = useState({
+    email: '',
+    password: ''
+  })
 
-    const [values, setValues] = useState({
-        email: '',
-        password: ''
+  const [error, setError] = useState(null)
+  const navigate = useNavigate()
+  axios.defaults.withCredentials = true;
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    axios.post('http://localhost:3000/auth/adminlogin', values)
+      .then(result => {
+        if (result.data.loginStatus) {
+          localStorage.setItem("valid", true)
+          navigate('/dashboard')
+        } else {
+          setError(result.data.Error)
+        }
       })
-    
-      const [error, setError] = useState(null)
-      const navigate = useNavigate()
-      axios.defaults.withCredentials = true;
-      const handleSubmit = (event) => {
-        event.preventDefault();
-        axios.post('http://localhost:3000/employee/employee_login', values)
-          .then(result => {
-            if (result.data.loginStatus) {
-              localStorage.setItem("valid", true)
-              navigate('/employeedashboard')
-            } else {
-              setError(result.data.Error)
-            }
-          })
-          .catch(err => console.log(err))
-      }
-    
-    const handleBackToStart = () => {
-        navigate('/') // Change this to the path of your start page
-      }
+      .catch(err => console.log(err))
+  }
 
-    return (
-      <div className='d-flex justify-content-center align-items-center vh-100 loginPage position-relative'>
+  const handleBackToStart = () => {
+    navigate('/') // Ndryshoni këtu për të kthyer në faqen fillestare
+  }
+
+  return (
+    <div className='d-flex justify-content-center align-items-center vh-100 loginPage position-relative'>
       <div className='p-3 rounded w-25 border loginForm'>
         <div className='text-warning'>
           {error && error}
@@ -52,13 +52,12 @@ const EmployeeLogin = () => {
           <button className='btn btn-success w-100 rounded-0 mb-2'>Log in</button>
         </form>
         <button className='btn btn-outline-primary rounded-0 position-absolute top-0 start-0 mt-3 ms-3 d-flex align-items-center backButton' onClick={handleBackToStart}>
-        <i className="bi bi-arrow-left me-1"></i>
+          <i className="bi bi-arrow-left me-1"></i>
         </button>
         <a href="/ForgotPassword" className="forgot-password-link">Forgot your password?</a>
       </div>
-    </div>    
-    )
+    </div>
+  )
 }
 
-
-export default EmployeeLogin
+export default Login
