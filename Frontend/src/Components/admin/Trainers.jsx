@@ -3,30 +3,32 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 
 const Trainers = () => {
-  const [trainers , setTrainers] = useState([])
-  const navigate = useNavigate()
+  const [trainers, setTrainers] = useState([]);
+  const navigate = useNavigate();
   
   useEffect(() => {
     axios.get('http://localhost:3000/auth/trainers')
-    .then(result => {
-        if(result.data.Status){
-            setTrainers(result.data.Result);
+      .then(result => {
+        if (result.data.Status) {
+          setTrainers(result.data.Result);
         } else {
-            alert(result.data.Error)
+          alert(result.data.Error);
         }
-    }).catch(err => console.log(err))
+      })
+      .catch(err => console.log(err));
+  }, []);
 
-  }, [])
   const handleDelete = (id) => {
-    axios.delete('http://localhost:3000/auth/delete_trainers/' +id)
-    .then(result => {
-      if(result.data.Status) {
-         navigate('/dashboard/trainers')
-      }else {
-        alert(result.data.Error)
-      }
-    })
-  }
+    axios.delete(`http://localhost:3000/auth/delete_trainers/${id}`)
+      .then(result => {
+        if (result.data.Status) {
+          navigate('/dashboard/trainers');
+        } else {
+          alert(result.data.Error);
+        }
+      })
+      .catch(err => console.log(err));
+  };
 
   return (
     <div className="container px-5 mt-5">
@@ -50,14 +52,16 @@ const Trainers = () => {
                 </tr>
               </thead>
               <tbody>
-                {trainers.map(e => (
-                  <tr key={e.id}>
-                    <td>{e.name}</td>
-                    <td>{e.qualification}</td>
-                    <td>{e.email}</td>
-                    <td>{e.address}</td>
-                    <Link to={`/dashboard/edit_trainers/`+e.id} className="btn btn-info btn-sm me-2"> Edit </Link>
-                      <button className="btn btn-warning btn-sm" onClick={() => handleDelete(e.id)}> Delete </button>
+                {trainers.map(trainer => (
+                  <tr key={trainer.id}>
+                    <td>{trainer.name}</td>
+                    <td>{trainer.qualification}</td>
+                    <td>{trainer.email}</td>
+                    <td>{trainer.address}</td>
+                    <td>
+                      <Link to={`/dashboard/edit_trainers/${trainer.id}`} className="btn btn-info btn-sm me-2">Edit</Link>
+                      <button className="btn btn-warning btn-sm" onClick={() => handleDelete(trainer.id)}>Delete</button>
+                    </td>
                   </tr>
                 ))}
               </tbody>

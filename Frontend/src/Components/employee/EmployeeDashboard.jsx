@@ -1,21 +1,58 @@
-// eslint-disable-next-line no-unused-vars
-import React from "react";
-import { Link, Outlet, useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import axios from "axios";
 
 const EmployeeDashboard = () => {
-  const navigate = useNavigate()
-  axios.defaults.withCredentials = true
+  const [trainings, setTrainings] = useState([]);
+  const [trainers, setTrainers] = useState([]);
+  const navigate = useNavigate();
+  const { employeeId } = useParams();
+  axios.defaults.withCredentials = true;
+
+  useEffect(() => {
+    const fetchTrainings = async () => {
+      try {
+        const response = await axios.get('http://localhost:3000/auth/employee/trainings');
+        if (response.data.Status) {
+          setTrainings(response.data.Result);
+        } else {
+          console.error(response.data.Error);
+        }
+      } catch (error) {
+        console.error("There was an error fetching the trainings!", error);
+      }
+    };
+
+    const fetchTrainers = async () => {
+      debugger;
+      try {
+        const response = await axios.get(`http://localhost:3000/employee/employee_trainers`);
+        if (response.data.Status) {
+          setTrainers(response.data.Result);
+        } else {
+          console.error(response.data.Error);
+        }
+      } catch (error) {
+        console.error("There was an error fetching the trainers!", error);
+      }
+    };
+
+    fetchTrainings();
+    fetchTrainers();
+  }, [employeeId]);
+
   const handleLogout = () => {
     axios.get('http://localhost:3000/employee/logout')
-    .then(result => {
-      if(result.data.Status) {
-        localStorage.removeItem("valid")
-        navigate('/')
-      }
-    })
-  }
+      .then(result => {
+        if (result.data.Status) {
+          localStorage.removeItem("valid");
+          navigate('/');
+        }
+      })
+      .catch(err => console.error("There was an error during logout!", err));
+  };
+
   return (
     <div className="container-fluid">
       <div className="row flex-nowrap">
@@ -54,7 +91,7 @@ const EmployeeDashboard = () => {
                   to="/employeedashboard/employeetraining"
                   className="nav-link px-0 align-middle text-white"
                 >
-                  <i className="fs-4 bi-book ms-2"></i>
+                  <i className="fs-4 bi-journal-text ms-2"></i>
                   <span className="ms-2 d-none d-sm-inline">
                     Training & Development
                   </span>
@@ -136,10 +173,11 @@ const EmployeeDashboard = () => {
             <h4>Employee Management System</h4>
           </div>
           <Outlet />
+          </div>
         </div>
       </div>
-    </div>
-  );  
+   
+  );
 };
 
 export default EmployeeDashboard;
