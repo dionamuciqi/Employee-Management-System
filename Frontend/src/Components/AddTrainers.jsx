@@ -134,9 +134,9 @@ const AddTrainers = () => {
                             onChange={handleChange}
                         >
                             <option value="">Select Training Mode</option>
-                            <option value="physical">Physical</option>
-                            <option value="online">Online</option>
-                            <option value="physical&online">Physical & Online</option>
+                            <option value="1">Physical</option>
+                            <option value="2">Online</option>
+                            <option value="3">Physical & Online</option>
                         </select>
                     </div>
                     <div className="col-12">

@@ -25,8 +25,9 @@ const EmployeeDashboard = () => {
     };
 
     const fetchTrainers = async () => {
+      debugger;
       try {
-        const response = await axios.get(`http://localhost:3000/auth/employee_trainers/${employeeId}`);
+        const response = await axios.get(`http://localhost:3000/employee/employee_trainers`);
         if (response.data.Status) {
           setTrainers(response.data.Result);
         } else {
@@ -172,31 +173,10 @@ const EmployeeDashboard = () => {
             <h4>Employee Management System</h4>
           </div>
           <Outlet />
-          <div className="px-3 py-3">
-            <h3>Your Trainings</h3>
-            <ul>
-              {trainings.map(training => (
-                <li key={training.id}>
-                  {training.name} - {training.training_mode}
-                </li>
-              ))}
-            </ul>
-            <h3>Your Trainers</h3>
-            {trainers.length > 0 ? (
-              <ul>
-                {trainers.map(trainer => (
-                  <li key={trainer.id}>
-                    {trainer.name} - {trainer.qualification}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <p>No trainers assigned.</p>
-            )}
           </div>
         </div>
       </div>
-    </div>
+   
   );
 };
 

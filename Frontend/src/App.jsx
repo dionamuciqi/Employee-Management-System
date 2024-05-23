@@ -13,6 +13,7 @@ import AddDepartment from './Components/AddDepartment'
 import AddEmployee from './Components/AddEmployee'
 import AddTrainers from './Components/AddTrainers'
 import Trainers from './Components/Trainers'
+import EmployeeTraining from './Components/EmployeeTraining'
 import EditEmployee from './Components/EditEmployee'
 import EditTrainers from './Components/EditTrainers'
 import Start from './Components/Start'
@@ -30,16 +31,18 @@ function App() {
       <Routes>
           <Route path='/' element={<Start />}></Route>
           <Route path='/adminlogin' element={<Login />}></Route>
+         
           <Route path='/employee_login' element={<EmployeeLogin />}></Route>
           <Route path='/employeedashboard' element={
           <PrivateRoute>
           <EmployeeDashboard />
           </PrivateRoute>}>
+          <Route path='/employeedashboard/employeetraining' element={<EmployeeTraining/>} />
           </Route>
           <Route path='/dashboard' element={
-          <PrivateRoute>
+          <PrivateRoute>           
             <Dashboard />
-          </PrivateRoute>}>
+          </PrivateRoute>}>   
           <Route path='' element={<Home />}></Route>
           <Route path='/dashboard/employee' element={<Employee />}></Route>
           <Route path='/dashboard/trainers' element={<Trainers />}></Route>

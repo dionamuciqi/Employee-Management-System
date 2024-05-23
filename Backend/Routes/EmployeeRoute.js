@@ -84,17 +84,43 @@ router.get('/detail/:id' , (req, res) => {
     });
 });
 // Get trainers for a specific employee
-router.get('/employee_trainers/:employee_id', (req, res) => {
-  const { employee_id } = req.params;
+router.get('/employee_trainers', (req, res) => {
+  const test = req.headers.cookie;
+    const decodedToken = jwt.verify(test.replace("token=",""),"jwt_secret_key" )
+    const userId = decodedToken.id
   const sql = `
       SELECT trainers.* FROM trainers
       JOIN employee_trainers ON trainers.id = employee_trainers.trainer_id
       WHERE employee_trainers.employee_id = ?
   `;
-  con.query(sql, [employee_id], (err, result) => {
+  con.query(sql, [userId], (err, result) => {
       if (err) return res.json({ Status: false, Error: "Query Error" });
       return res.json({ Status: true, Result: result });
   });
+});
+
+router.get('/trainings', (req, res) => {
+    const cookies = req.headers.cookie;
+    const decodedToken = jwt.verify(cookies.replace("token=",""),"jwt_secret_key" )
+    const userId = decodedToken.id
+    const sql = `
+    SELECT 
+	t.id,
+	t.name,
+    t.qualification,
+    t.email,
+    d.name as department,
+    tm.mode as training
+    FROM trainers t
+	inner join employee_trainers et on et.trainer_id = t.id
+    inner join department d on d.id = t.department_id
+    left join training_modes tm on tm.id = t.training_mode_id
+    where et.employee_id = ?
+    `;
+    con.query(sql, [userId], (err, result) => {
+        if (err) return res.json({ Status: false, Error: "Query Error" });
+        return res.json({ Status: true, Result: result });
+    });
 });
 
 // Endpoint për të marrë trajnerët e specifikuar për një punëtor

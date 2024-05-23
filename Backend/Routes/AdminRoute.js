@@ -175,17 +175,35 @@ router.get('/admin_records', (req, res) => {
 
 router.post('/add_trainers', (req, res) => {
     const sql = `INSERT INTO trainers 
-    (name , qualification , email , address , department_id) 
+    (name , qualification , email , address , department_id, training_mode_id) 
     VALUES (?)`;
-
+    console.log(req.body)
         const values = [
             req.body.name,
             req.body.qualification,
             req.body.email,
             req.body.address,
-            req.body.department_id
+            req.body.department_id,
+            req.body.training_mode
         ]
         con.query(sql, [values], (err, result) => {
+            console.log('Result,', result);
+
+            
+            //TODO: Me insert ne emplee_trainers
+         const sql = `INSERT INTO employee_trainers 
+         (employee_id, trainer_id) 
+         VALUES (?)`;
+    
+            const values = [
+             req.body.employee_id,
+             result.insertId
+            ]
+            console.log('Valuies',values);
+             con.query(sql, [values], (err, result) => {
+                // if(err) return res.json({Status: false, Error: err})
+                //  return res.json({Status: true})
+             })
             if(err) return res.json({Status: false, Error: err})
             return res.json({Status: true})
         })
@@ -257,14 +275,21 @@ router.get('/employee_trainers/:employee_id', (req, res) => {
     });
 });
 
-router.get('/employee/trainings', (req, res) => {
-    const employeeId = req.user.id; // Assuming you have user info in the request object
-    const sql = "SELECT * FROM trainings WHERE employee_id = ?";
-    con.query(sql, [employeeId], (err, result) => {
-        if (err) return res.json({ Status: false, Error: "Query Error" });
-        return res.json({ Status: true, Result: result });
-    });
-});
+// router.get('/employee/trainings', (req, res) => {
+//     const cookies = req.headers.cookie;
+//     console.log(cookies)
+//     const decodedToken = jwt.verify(cookies.replace("token=",""),"jwt_secret_key" )
+//     const userId = decodedToken.id
+//     console.log('userId',userId)
+//     // Nuk vjen kjo info ne front eshte ne jwt te userit qe eshte i kyqur const employeeId = req.user.id; // Assuming you have user info in the request object
+//     const sql = `SELECT t.* FROM trainers t
+// 	                inner join employee_trainers et on et.trainer_id = t.id
+//                  where et.employee_id = ?`;
+//     con.query(sql, [userId], (err, result) => {
+//         if (err) return res.json({ Status: false, Error: "Query Error" });
+//         return res.json({ Status: true, Result: result });
+//     });
+// }); 
 
 router.get('/employee_trainers/:employee_id', (req, res) => {
     const { employee_id } = req.params;
@@ -279,13 +304,17 @@ router.get('/employee_trainers/:employee_id', (req, res) => {
     });
 });
 router.get('/employee/trainings', (req, res) => {
-    const employeeId = req.user.id; // Assuming req.user.id is the employee ID from the token
+    const cookies = req.headers.cookie;
+    console.log(cookies)
+    const decodedToken = jwt.verify(cookies.replace("token=",""),"jwt_secret_key" )
+    const userId = decodedToken.id
+    console.log('userId',userId)
     const sql = `
         SELECT trainings.* FROM trainings
         JOIN employee_trainings ON trainings.id = employee_trainings.training_id
         WHERE employee_trainings.employee_id = ?
     `;
-    con.query(sql, [employeeId], (err, result) => {
+    con.query(sql, [userId], (err, result) => {
         if (err) return res.json({ Status: false, Error: "Query Error" });
         return res.json({ Status: true, Result: result });
     });
