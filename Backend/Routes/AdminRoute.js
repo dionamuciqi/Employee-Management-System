@@ -349,6 +349,43 @@ router.get('/employee_trainers/:employee_id', (req, res) => {
 });
 
 
+
+router.post('/announcements', (req, res) => {
+    const { message, employeeId } = req.body;
+    console.log('Received request data:', req.body);
+
+    if (!message || !employeeId) {
+        console.error('Invalid request data:', req.body);
+        return res.status(400).json({ success: false, error: 'Invalid request data' });
+    }
+
+    const sql = 'INSERT INTO announcements (message, employee_id) VALUES (?, ?)';
+    con.query(sql, [message, employeeId], (err, result) => {
+        if (err) {
+            console.error('Error inserting announcement:', err);
+            return res.status(500).json({ success: false, error: 'Error inserting announcement' });
+        }
+        console.log('Announcement inserted successfully with ID:', result.insertId);
+        return res.json({ success: true, notification: { id: result.insertId, message, employeeId } });
+    });
+});
+
+
+router.delete('/clearnotifications', (req, res) => {
+    const sql = 'DELETE FROM announcements';
+    con.query(sql, (err, result) => {
+      if (err) {
+        console.error('Error clearing notifications:', err);
+        return res.status(500).json({ success: false, error: 'Error clearing notifications' });
+      }
+      console.log('Notifications cleared successfully!');
+      return res.json({ success: true, message: 'Notifications cleared successfully' });
+    });
+  });
+
+
+
+
 router.get('/logout', (req, res) => {
     res.clearCookie('token')
     return res.json({Status:true})

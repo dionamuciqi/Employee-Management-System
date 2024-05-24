@@ -151,19 +151,34 @@ router.get('/employee_trainers/:employee_id', (req, res) => {
     });
 });
 
-// Help and Support Endpoint
-router.post('/helpsupport', (req, res) => {
-    const { question } = req.body;
-    const sql = 'INSERT INTO help_support (question) VALUES (?)';
-    con.query(sql, [question], (err, result) => {
+//----------------------------------------------------------------------------------------------
+
+router.get('/notifications', (req, res) => {
+    const cookies = req.headers.cookie;
+    const decodedToken = jwt.verify(cookies.replace("token=", ""), "jwt_secret_key");
+    const userId = decodedToken.id;
+    console.log('Decoded User ID:', userId);
+
+    const sql = `
+    SELECT 
+    id, 
+    message, 
+    created_at 
+    FROM announcements 
+    WHERE employee_id = ? 
+    ORDER BY created_at DESC`;
+
+    con.query(sql, [userId], (err, results) => {
         if (err) {
-            console.error('Error saving question:', err);
-            return res.status(500).json({ success: false, error: 'Error saving question' });
+            console.error('Error fetching notifications:', err);
+            return res.status(500).json({ success: false, error: 'Error fetching notifications' });
         }
-        console.log('Question saved successfully');
-        return res.json({ success: true, message: 'Question saved successfully' });
+
+        console.log('Fetched Notifications:', results);
+        return res.json({ success: true, notifications: results });
     });
 });
+
 
 // Logout Endpoint
 router.get('/logout', (req, res) => {
@@ -175,5 +190,6 @@ router.get('/logout', (req, res) => {
     res.clearCookie('token')
     return res.json({Status: true})
 })
+
 
 export { router as EmployeeRouter}

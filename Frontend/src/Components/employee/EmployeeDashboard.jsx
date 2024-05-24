@@ -139,7 +139,7 @@ const EmployeeDashboard = () => {
               </li>
               <li className="w-100">
                 <Link
-                  to="/employeedashboard/employeenewsupdates"
+                  to="/employeedashboard/employeenews"
                   className="nav-link px-0 align-middle text-white"
                 >
                   <i className="fs-4 bi-newspaper ms-2"></i>

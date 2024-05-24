@@ -24,6 +24,7 @@ import AttendanceManagement from './Components/admin/AttendanceManagement'
 import LeaveManagement from './Components/admin/LeaveManagement'
 import NotificationsandAnnouncements from './Components/admin/NotificationsandAnnouncements'
 import PayrollManagement from './Components/admin/PayrollManagement'
+import EmployeeNews from './Components/employee/EmployeeNews'
 
 function App() {
   return (
@@ -38,6 +39,7 @@ function App() {
           <EmployeeDashboard />
           </PrivateRoute>}>
           <Route path='/employeedashboard/employeetraining' element={<EmployeeTraining/>} />
+          <Route path='/employeedashboard/employeenews' element={<EmployeeNews />} />
           </Route>
           <Route path='/dashboard' element={
           <PrivateRoute>           
