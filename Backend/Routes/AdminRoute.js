@@ -351,22 +351,34 @@ router.get('/employee_trainers/:employee_id', (req, res) => {
 
 
 router.post('/announcements', (req, res) => {
-    const { message, employeeId } = req.body;
+    const { message } = req.body;
     console.log('Received request data:', req.body);
 
-    if (!message || !employeeId) {
+    if (!message) {
         console.error('Invalid request data:', req.body);
-        return res.status(400).json({ success: false, error: 'Invalid request data' });
+        return res.status(400).json({ success: false, error: 'Message is required' });
     }
 
-    const sql = 'INSERT INTO announcements (message, employee_id) VALUES (?, ?)';
-    con.query(sql, [message, employeeId], (err, result) => {
+    const sql = 'INSERT INTO announcements (message) VALUES (?)';
+    con.query(sql, [message], (err, result) => {
         if (err) {
             console.error('Error inserting announcement:', err);
             return res.status(500).json({ success: false, error: 'Error inserting announcement' });
         }
         console.log('Announcement inserted successfully with ID:', result.insertId);
-        return res.json({ success: true, notification: { id: result.insertId, message, employeeId } });
+        return res.json({ success: true, notification: { id: result.insertId, message } });
+    });
+});
+
+router.get('/announcements', (req, res) => {
+    const sql = 'SELECT id, message, created_at FROM announcements'; // Include creation time in the query
+    con.query(sql, (err, results) => {
+        if (err) {
+            console.error('Error fetching announcements:', err);
+            return res.status(500).json({ success: false, error: 'Error fetching announcements' });
+        }
+        console.log('Announcements fetched successfully:', results);
+        return res.json({ success: true, notifications: results });
     });
 });
 
@@ -381,6 +393,7 @@ router.delete('/clearnotifications', (req, res) => {
       console.log('Notifications cleared successfully!');
       return res.json({ success: true, message: 'Notifications cleared successfully' });
     });
+<<<<<<< HEAD
   });
  //-------------------
  router.post('/certifications', (req, res) => {
@@ -418,6 +431,9 @@ router.delete('/clearcertifications', (req, res) => {
     });
 });
 //-----------------------
+=======
+});
+>>>>>>> 6d3de3380b486765f666c7305b2a6ae9b64dd580
 
 
 
