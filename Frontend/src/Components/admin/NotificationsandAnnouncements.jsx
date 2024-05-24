@@ -1,9 +1,24 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 
 const NotificationsAndAnnouncements = () => {
   const [announcement, setAnnouncement] = useState('');
   const [notifications, setNotifications] = useState([]);
+
+  useEffect(() => {
+    // Fetch all notifications when the component mounts
+    axios.get('http://localhost:3000/auth/announcements')
+      .then(response => {
+        if (response.data.success) {
+          setNotifications(response.data.notifications);
+        } else {
+          console.error('Error fetching notifications:', response.data.error);
+        }
+      })
+      .catch(error => {
+        console.error('There was an error fetching notifications!', error);
+      });
+  }, []);
 
   const handleAnnouncementChange = (e) => {
     setAnnouncement(e.target.value);
@@ -17,7 +32,6 @@ const NotificationsAndAnnouncements = () => {
     }
     const requestData = {
       message: announcement,
-      employeeId: 3 
     };
     console.log('Sending request data:', requestData);
 
@@ -34,7 +48,7 @@ const NotificationsAndAnnouncements = () => {
       .catch(error => {
         console.error('There was an error submitting announcement!', error);
       });
-};
+  };
 
   const handleClearAll = () => {
     axios.delete('http://localhost:3000/auth/clearnotifications')
