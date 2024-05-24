@@ -382,7 +382,42 @@ router.delete('/clearnotifications', (req, res) => {
       return res.json({ success: true, message: 'Notifications cleared successfully' });
     });
   });
+ //-------------------
+ router.post('/certifications', (req, res) => {
+    const { certificationName, employeeId } = req.body;
+    console.log('Received request data:', req.body);
 
+    // Validate input data
+    if (!certificationName || !employeeId) {
+        console.error('Invalid request data:', req.body);
+        return res.status(400).json({ success: false, error: 'Invalid request data' });
+    }
+
+    // Insert certification into the database
+    const sql = 'INSERT INTO certifications (certificationName, employeeId) VALUES (?, ?)';
+    con.query(sql, [certificationName, employeeId], (err, result) => {
+        if (err) {
+            console.error('Error inserting certification:', err);
+            return res.status(500).json({ success: false, error: 'Error inserting certification' });
+        }
+        console.log('Certification inserted successfully with ID:', result.insertId);
+        return res.json({ success: true, certification: { id: result.insertId, certificationName, employeeId } });
+    });
+});
+
+// Route to clear all certifications
+router.delete('/clearcertifications', (req, res) => {
+    const sql = 'DELETE FROM certifications';
+    con.query(sql, (err, result) => {
+        if (err) {
+            console.error('Error clearing certifications:', err);
+            return res.status(500).json({ success: false, error: 'Error clearing certifications' });
+        }
+        console.log('Certifications cleared successfully!');
+        return res.json({ success: true, message: 'Certifications cleared successfully' });
+    });
+});
+//-----------------------
 
 
 

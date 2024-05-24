@@ -25,6 +25,8 @@ import LeaveManagement from './Components/admin/LeaveManagement'
 import NotificationsandAnnouncements from './Components/admin/NotificationsandAnnouncements'
 import PayrollManagement from './Components/admin/PayrollManagement'
 import EmployeeNews from './Components/employee/EmployeeNews'
+import Certifications from './Components/employee/Certifications'
+import CertificationsManagement from './Components/admin/CertificationsManagement'
 
 function App() {
   return (
@@ -40,6 +42,7 @@ function App() {
           </PrivateRoute>}>
           <Route path='/employeedashboard/employeetraining' element={<EmployeeTraining/>} />
           <Route path='/employeedashboard/employeenews' element={<EmployeeNews />} />
+          <Route path='/employeedashboard/certifications' element={<Certifications />} />
           </Route>
           <Route path='/dashboard' element={
           <PrivateRoute>           
@@ -52,6 +55,7 @@ function App() {
           <Route path='/dashboard/notificationsandannouncements' element={<NotificationsandAnnouncements />}></Route>
           <Route path='/dashboard/payrollmanagement' element={<PayrollManagement />}></Route>
           <Route path='/dashboard/leavemanagement' element={<LeaveManagement />}></Route>
+          <Route path='/dashboard/certificationsmanagement' element={<CertificationsManagement />}></Route>
           <Route path='/dashboard/category' element={<Category />}></Route>
           <Route path='/dashboard/department' element={<Department />}></Route>
           <Route path='/dashboard/profile' element={<Profile />}></Route>
