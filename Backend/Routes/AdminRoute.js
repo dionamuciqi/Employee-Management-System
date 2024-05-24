@@ -393,8 +393,8 @@ router.delete('/clearnotifications', (req, res) => {
       console.log('Notifications cleared successfully!');
       return res.json({ success: true, message: 'Notifications cleared successfully' });
     });
-<<<<<<< HEAD
   });
+
  //-------------------
  router.post('/certifications', (req, res) => {
     const { certificationName, employeeId } = req.body;
@@ -431,9 +431,8 @@ router.delete('/clearcertifications', (req, res) => {
     });
 });
 //-----------------------
-=======
 });
->>>>>>> 6d3de3380b486765f666c7305b2a6ae9b64dd580
+
 
 
 
