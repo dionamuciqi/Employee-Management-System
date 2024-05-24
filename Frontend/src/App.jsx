@@ -25,13 +25,10 @@ import LeaveManagement from './Components/admin/LeaveManagement'
 import NotificationsandAnnouncements from './Components/admin/NotificationsandAnnouncements'
 import PayrollManagement from './Components/admin/PayrollManagement'
 import EmployeeNews from './Components/employee/EmployeeNews'
-<<<<<<< HEAD
 import Certifications from './Components/employee/Certifications'
 import CertificationsManagement from './Components/admin/CertificationsManagement'
-=======
 import EmployeeHelpSupport from './Components/employee/EmployeeHelpSupport'
 import AdminSupportRequests from './Components/admin/AdminSupportRequests'
->>>>>>> 6d3de3380b486765f666c7305b2a6ae9b64dd580
 
 function App() {
   return (
@@ -47,11 +44,8 @@ function App() {
           </PrivateRoute>}>
           <Route path='/employeedashboard/employeetraining' element={<EmployeeTraining/>} />
           <Route path='/employeedashboard/employeenews' element={<EmployeeNews />} />
-<<<<<<< HEAD
           <Route path='/employeedashboard/certifications' element={<Certifications />} />
-=======
           <Route path='/employeedashboard/employeehelpsupport' element={<EmployeeHelpSupport />} />
->>>>>>> 6d3de3380b486765f666c7305b2a6ae9b64dd580
           </Route>
           <Route path='/dashboard' element={
           <PrivateRoute>           
