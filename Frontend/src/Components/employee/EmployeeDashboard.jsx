@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import  { useEffect, useState } from "react";
 import { Link, Outlet, useNavigate, useParams } from "react-router-dom";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import axios from "axios";
@@ -79,7 +79,7 @@ const EmployeeDashboard = () => {
               </li>
               <li className="w-100">
                 <Link
-                  to="/employeedashboard/employeecertifications"
+                  to="/employeedashboard/certifications"
                   className="nav-link px-0 align-middle text-white"
                 >
                   <i className="fs-4 bi-award ms-2"></i>
@@ -110,7 +110,7 @@ const EmployeeDashboard = () => {
               </li>
               <li className="w-100">
                 <Link
-                  to="/employeedashboard/employeepayroll"
+                  to="/employeedashboard/payroll"
                   className="nav-link px-0 align-middle text-white"
                 >
                   <i className="fs-4 bi-cash ms-2"></i>
@@ -139,7 +139,7 @@ const EmployeeDashboard = () => {
               </li>
               <li className="w-100">
                 <Link
-                  to="/employeedashboard/employeenewsupdates"
+                  to="/employeedashboard/employeenews"
                   className="nav-link px-0 align-middle text-white"
                 >
                   <i className="fs-4 bi-newspaper ms-2"></i>

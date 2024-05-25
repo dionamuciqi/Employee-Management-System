@@ -25,6 +25,12 @@ import LeaveManagement from './Components/admin/LeaveManagement'
 import NotificationsandAnnouncements from './Components/admin/NotificationsandAnnouncements'
 import PayrollManagement from './Components/admin/PayrollManagement'
 import EmployeeDetail from './Components/employee/EmployeeDetail'
+import EmployeeNews from './Components/employee/EmployeeNews'
+import Certifications from './Components/employee/Certifications'
+import CertificationsManagement from './Components/admin/CertificationsManagement'
+import EmployeeHelpSupport from './Components/employee/EmployeeHelpSupport'
+import AdminSupportRequests from './Components/admin/AdminSupportRequests'
+import Payroll from './Components/employee/Payroll'
 
 function App() {
   return (
@@ -38,7 +44,11 @@ function App() {
           <EmployeeDashboard />  
           </PrivateRoute>}>
           <Route path='/employeedashboard/employeedetail/:id' element={<EmployeeDetail />} />
-          <Route path='/employeedashboard/employeetraining' element={<EmployeeTraining/>} /> 
+          <Route path='/employeedashboard/employeetraining' element={<EmployeeTraining/>} />
+          <Route path='/employeedashboard/employeenews' element={<EmployeeNews />} />
+          <Route path='/employeedashboard/certifications' element={<Certifications />} />
+          <Route path='/employeedashboard/employeehelpsupport' element={<EmployeeHelpSupport />} />
+          <Route path='/employeedashboard/payroll' element={<Payroll />} />
           </Route>
           <Route path='/dashboard' element={
           <PrivateRoute>           
@@ -50,10 +60,12 @@ function App() {
           <Route path='/dashboard/attendancemanagement' element={<AttendanceManagement />}></Route>
           <Route path='/dashboard/notificationsandannouncements' element={<NotificationsandAnnouncements />}></Route>
           <Route path='/dashboard/payrollmanagement' element={<PayrollManagement />}></Route>
-          <Route path='/dashboard/profile' element={<Profile />}></Route>
           <Route path='/dashboard/leavemanagement' element={<LeaveManagement />}></Route>
+          <Route path='/dashboard/certificationsmanagement' element={<CertificationsManagement />}></Route>
           <Route path='/dashboard/category' element={<Category />}></Route>
           <Route path='/dashboard/department' element={<Department />}></Route>
+          <Route path='/dashboard/profile' element={<Profile />}></Route>
+          <Route path='/dashboard/adminsupportrequests' element={<AdminSupportRequests />}></Route>
           <Route path='/dashboard/add_category' element={<AddCategory />}></Route>
           <Route path='/dashboard/add_department' element={<AddDepartment />}></Route>
           <Route path='/dashboard/add_employee' element={<AddEmployee />}></Route>

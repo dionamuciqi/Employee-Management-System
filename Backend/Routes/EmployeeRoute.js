@@ -38,18 +38,6 @@ router.get('/detail/:id' , (req, res) => {
         return res.json(result)
     })
 })
-router.post('/helpsupport', (req, res) => {
-    const { question } = req.body;
-    const sql = 'INSERT INTO help_support (question) VALUES (?)';
-    con.query(sql, [question], (err, result) => {
-      if (err) {
-        console.error('Error saving question:', err);
-        return res.status(500).json({ success: false, error: 'Error saving question' });
-      }
-      console.log('Question saved successfully');
-      return res.json({ success: true, message: 'Question saved successfully' });
-    });
-  });
   router.post("/employee_login", (req, res) => {
     const sql = "SELECT * from employee Where email = ?";
     con.query(sql, [req.body.email], (err, result) => {
@@ -151,19 +139,60 @@ router.get('/employee_trainers/:employee_id', (req, res) => {
     });
 });
 
-// Help and Support Endpoint
-router.post('/helpsupport', (req, res) => {
-    const { question } = req.body;
-    const sql = 'INSERT INTO help_support (question) VALUES (?)';
-    con.query(sql, [question], (err, result) => {
+//----------------------------------------------------------------------------------------------
+
+router.get('/notifications', (req, res) => {
+    const cookies = req.headers.cookie;
+    const decodedToken = jwt.verify(cookies.replace("token=", ""), "jwt_secret_key");
+    const userId = decodedToken.id;
+    console.log('Decoded User ID:', userId);
+
+    const sql = `
+    SELECT 
+    id, 
+    message, 
+    created_at 
+    FROM announcements 
+    WHERE employee_id = ? 
+    ORDER BY created_at DESC`;
+
+    con.query(sql, [userId], (err, results) => {
         if (err) {
-            console.error('Error saving question:', err);
-            return res.status(500).json({ success: false, error: 'Error saving question' });
+            console.error('Error fetching notifications:', err);
+            return res.status(500).json({ success: false, error: 'Error fetching notifications' });
         }
-        console.log('Question saved successfully');
-        return res.json({ success: true, message: 'Question saved successfully' });
+
+        console.log('Fetched Notifications:', results);
+        return res.json({ success: true, notifications: results });
     });
 });
+//----------------------------
+router.get('/certifications', (req, res) => {
+    const cookies = req.headers.cookie;
+    const decodedToken = jwt.verify(cookies.replace("token=", ""), "jwt_secret_key");
+    const userId = decodedToken.id;
+    console.log('Decoded User ID:', userId);
+
+    const sql = `
+    SELECT 
+    id, 
+    certificationName, 
+    employeeId 
+    FROM certifications 
+    WHERE employeeId = ? 
+    ORDER BY id DESC`;
+
+    con.query(sql, [userId], (err, results) => {
+        if (err) {
+            console.error('Error fetching certifications:', err);
+            return res.status(500).json({ success: false, error: 'Error fetching certifications' });
+        }
+
+        console.log('Fetched Certifications:', results);
+        return res.json({ success: true, certifications: results });
+    });
+});
+//---------------------
 
 // Logout Endpoint
 router.get('/logout', (req, res) => {
@@ -171,9 +200,44 @@ router.get('/logout', (req, res) => {
     return res.json({Status: true});
 });
 
-router.get('/logout', (req, res) => {
-    res.clearCookie('token')
-    return res.json({Status: true})
-})
+//-------------------
+
+
+// Endpoint to fetch payroll information based on payment date
+router.get('/payroll', (req, res) => {
+    // Extract user ID from JWT token
+    const cookies = req.headers.cookie;
+    const decodedToken = jwt.verify(cookies.replace("token=", ""), "jwt_secret_key");
+    const userId = decodedToken.id;
+    console.log('Decoded User ID:', userId);
+
+    // Example: Fetch payroll information based on payment date
+    const paymentDate = req.query.paymentDate; // Assuming paymentDate is passed as a query parameter
+    console.log('Requested Payment Date:', paymentDate);
+
+    // SQL query to fetch payroll information based on payment date
+    const sql = `
+    SELECT 
+    id, 
+    employeeId, 
+    salaryAmount, 
+    paymentDate 
+    FROM payroll 
+    WHERE employeeId = ? AND paymentDate = ? 
+    ORDER BY id DESC`;
+
+    // Execute SQL query
+    con.query(sql, [userId, paymentDate], (err, results) => {
+        if (err) {
+            console.error('Error fetching payroll information:', err);
+            return res.status(500).json({ success: false, error: 'Error fetching payroll information' });
+        }
+
+        console.log('Fetched Payroll Information:', results);
+        return res.json({ success: true, payroll: results });
+    });
+});
+
+
 
 export { router as EmployeeRouter}
