@@ -46,7 +46,7 @@ const Certifications = () => {
               </ul>
               {certifications.length === 0 && (
                 <div className="alert text-center mt-3">
-                  No certifications available.
+                  No Certifications Available.
                 </div>
               )}
             </div>
