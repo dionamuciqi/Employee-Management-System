@@ -39,16 +39,6 @@ const PayrollManagement = () => {
   };
 
   const handleUpdateSalary = () => {
-    // Implement the logic to update the salary
-    // You can use axios.put or axios.patch to update the salary on the server
-    // Example:
-    // axios.patch(`http://localhost:3000/api/payroll/${employeeId}`, { salaryAmount: newSalary })
-    //   .then(response => {
-    //     console.log('Salary updated successfully!', response.data);
-    //   })
-    //   .catch(error => {
-    //     console.error('There was an error updating the salary!', error);
-    //   });
     if (!employeeId || !salaryAmount) {
       console.error('Please enter both Employee ID and Salary Amount to update.');
       return;
@@ -85,13 +75,15 @@ const PayrollManagement = () => {
           <h4>Salary Amount</h4>
         </div>
         <div className="card-body">
-          <input
-            type="text"
-            className="form-control"
-            value={salaryAmount}
-            onChange={handleSalaryAmountChange}
-          />
-          <button type="button" className="btn btn-primary mt-3" onClick={handleUpdateSalary}>Update</button>
+          <div className="input-group">
+            <input
+              type="text"
+              className="form-control"
+              value={salaryAmount}
+              onChange={handleSalaryAmountChange}
+            />
+            <button type="button" className="btn btn-primary" onClick={handleUpdateSalary}>Update</button>
+          </div>
         </div>
       </div>
       <div className="card mb-4">

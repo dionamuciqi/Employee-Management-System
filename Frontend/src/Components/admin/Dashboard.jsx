@@ -94,6 +94,15 @@ const Dashboard = () => {
               </li>
               <li className="w-100">
                 <Link
+                  to="/dashboard/certificationsmanagement"
+                  className="nav-link px-0 align-middle text-white"
+                >
+                  <i className="fs-4 bi-calendar3 ms-2"></i>
+                  <span className="ms-2 d-none d-sm-inline">Certifications</span>
+                </Link>
+              </li>
+              <li className="w-100">
+                <Link
                   to="/dashboard/payrollmanagement"
                   className="nav-link px-0 align-middle text-white"
                 >
@@ -121,6 +130,15 @@ const Dashboard = () => {
                 >
                   <i className="fs-4 bi-columns ms-2"></i>
                   <span className="ms-2 d-none d-sm-inline">Category</span>
+                </Link>
+              </li>
+              <li className="w-100">
+                <Link
+                  to="/dashboard/adminsupportrequests"
+                  className="nav-link px-0 align-middle text-white"
+                >
+                  <i className="fs-4 bi-person ms-2"></i>
+                  <span className="ms-2 d-none d-sm-inline">Support Requests</span>
                 </Link>
               </li>
               <li className="w-100">
