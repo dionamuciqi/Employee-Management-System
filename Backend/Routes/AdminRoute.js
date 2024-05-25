@@ -430,11 +430,7 @@ router.delete('/clearcertifications', (req, res) => {
         return res.json({ success: true, message: 'Certifications cleared successfully' });
     });
 });
-<<<<<<< HEAD
 
-
-=======
->>>>>>> 568d324173c205641b66a02126460235bdc584a0
 
 
 router.get('/logout', (req, res) => {
