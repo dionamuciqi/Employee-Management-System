@@ -1,7 +1,7 @@
 # Employee-Management-System
 
 
-This is  Employee Management System project  developed as part of a Distributed Systems .
+This is  Employee Management System project developed as part of a Distributed Systems .
 
 ## Overview
 
