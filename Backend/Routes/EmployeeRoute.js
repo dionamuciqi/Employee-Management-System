@@ -1,132 +1,90 @@
 import express from 'express';
 import con from '../utils/db.js';
 import jwt from 'jsonwebtoken';
-import multer from "multer";
 import bcrypt from 'bcrypt';
 
-const router = express.Router()
+const router = express.Router();
 
+// Helper function to extract and verify JWT token from cookies
+const extractUserIdFromToken = (cookies) => {
+    if (!cookies) throw new Error('Authentication token is missing');
+    const token = cookies.split('; ').find(cookie => cookie.startsWith('token='));
+    if (!token) throw new Error('Authentication token is missing');
+    const decodedToken = jwt.verify(token.split('=')[1], "jwt_secret_key");
+    return decodedToken.id;
+};
+
+// Employee login
 router.post("/employee_login", (req, res) => {
-    const sql = "SELECT * from employee Where email = ?";
-    con.query(sql, [req.body.email], (err, result) => {
-      if (err) return res.json({ loginStatus: false, Error: "Query error" });
-      if (result.length > 0) {
-        bcrypt.compare(req.body.password, result[0].password, (err, response) => {
-            if (err) return res.json({ loginStatus: false, Error: "Wrong Password" });
-            if(response) {
-                const email = result[0].email;
-                const token = jwt.sign(
-                    { role: "employee", email: email, id: result[0].id },
-                    "jwt_secret_key",
-                    { expiresIn: "1d" }
-                );
-                res.cookie('token', token)
-                return res.json({ loginStatus: true, id: result[0].id });
-            }
-        })
-        
-      } else {
-          return res.json({ loginStatus: false, Error: "wrong email or password" });
-      }
-    });
-  });
-
-router.get('/detail/:id' , (req, res) => {
-    const id = req.params.id;
-    const sql = "SELECT * FROM employee where id = ? "
-    con.query(sql, [id] , (err, result) => {
-        if(err) return res.json({Status:false});
-        return res.json(result)
-    })
-})
-  router.post("/employee_login", (req, res) => {
-    const sql = "SELECT * from employee Where email = ?";
-    con.query(sql, [req.body.email], (err, result) => {
+    const { email, password } = req.body;
+    const sql = "SELECT * from employee WHERE email = ?";
+    con.query(sql, [email], (err, result) => {
         if (err) return res.json({ loginStatus: false, Error: "Query error" });
         if (result.length > 0) {
-            bcrypt.compare(req.body.password, result[0].password, (err, response) => {
-                if (err) return res.json({ loginStatus: false, Error: "Wrong Password" });
-                if(response) {
-                    const email = result[0].email;
-                    const token = jwt.sign(
-                        { role: "employee", email: email, id: result[0].id },
-                        "jwt_secret_key",
-                        { expiresIn: "1d" }
-                    );
-                    res.cookie('token', token)
-                    return res.json({ loginStatus: true, id: result[0].id });
-                }
+            bcrypt.compare(password, result[0].password, (err, response) => {
+                if (err || !response) return res.json({ loginStatus: false, Error: "Wrong email or password" });
+                const token = jwt.sign({ role: "employee", email, id: result[0].id }, "jwt_secret_key", { expiresIn: "1d" });
+                res.cookie('token', token);
+                return res.json({ loginStatus: true, id: result[0].id });
             });
         } else {
-            return res.json({ loginStatus: false, Error: "wrong email or password" });
+            return res.json({ loginStatus: false, Error: "Wrong email or password" });
         }
     });
 });
 
-// Endpoint to get employee details
-router.get('/detail/:id' , (req, res) => {
+// Get employee details
+router.get('/detail/:id', (req, res) => {
     const id = req.params.id;
-    const sql = "SELECT * FROM employee where id = ? ";
-    con.query(sql, [id] , (err, result) => {
-        if(err) return res.json({Status:false});
+    const sql = "SELECT * FROM employee WHERE id = ?";
+    con.query(sql, [id], (err, result) => {
+        if (err) return res.json({ Status: false });
         return res.json(result);
     });
 });
+
 // Get trainers for a specific employee
 router.get('/employee_trainers', (req, res) => {
-  const test = req.headers.cookie;
-    const decodedToken = jwt.verify(test.replace("token=",""),"jwt_secret_key" )
-    const userId = decodedToken.id
-  const sql = `
-      SELECT trainers.* FROM trainers
-      JOIN employee_trainers ON trainers.id = employee_trainers.trainer_id
-      WHERE employee_trainers.employee_id = ?
-  `;
-  con.query(sql, [userId], (err, result) => {
-      if (err) return res.json({ Status: false, Error: "Query Error" });
-      return res.json({ Status: true, Result: result });
-  });
+    try {
+        const userId = extractUserIdFromToken(req.headers.cookie);
+        const sql = `
+            SELECT trainers.* FROM trainers
+            JOIN employee_trainers ON trainers.id = employee_trainers.trainer_id
+            WHERE employee_trainers.employee_id = ?
+        `;
+        con.query(sql, [userId], (err, result) => {
+            if (err) return res.json({ Status: false, Error: "Query Error" });
+            return res.json({ Status: true, Result: result });
+        });
+    } catch (error) {
+        return res.status(401).json({ success: false, error: error.message });
+    }
 });
 
+// Get trainings
 router.get('/trainings', (req, res) => {
-    const cookies = req.headers.cookie;
-    const decodedToken = jwt.verify(cookies.replace("token=",""),"jwt_secret_key" )
-    const userId = decodedToken.id
-    const sql = `
-    SELECT 
-	t.id,
-	t.name,
-    t.qualification,
-    t.email,
-    d.name as department,
-    tm.mode as training
-    FROM trainers t
-	inner join employee_trainers et on et.trainer_id = t.id
-    inner join department d on d.id = t.department_id
-    left join training_modes tm on tm.id = t.training_mode_id
-    where et.employee_id = ?
-    `;
-    con.query(sql, [userId], (err, result) => {
-        if (err) return res.json({ Status: false, Error: "Query Error" });
-        return res.json({ Status: true, Result: result });
-    });
+    try {
+        const userId = extractUserIdFromToken(req.headers.cookie);
+        const sql = `
+            SELECT 
+            t.id, t.name, t.qualification, t.email, 
+            d.name as department, tm.mode as training
+            FROM trainers t
+            INNER JOIN employee_trainers et ON et.trainer_id = t.id
+            INNER JOIN department d ON d.id = t.department_id
+            LEFT JOIN training_modes tm ON tm.id = t.training_mode_id
+            WHERE et.employee_id = ?
+        `;
+        con.query(sql, [userId], (err, result) => {
+            if (err) return res.json({ Status: false, Error: "Query Error" });
+            return res.json({ Status: true, Result: result });
+        });
+    } catch (error) {
+        return res.status(401).json({ success: false, error: error.message });
+    }
 });
 
-// Endpoint për të marrë trajnerët e specifikuar për një punëtor
-router.get('/employee_trainers/:employee_id', (req, res) => {
-  const { employee_id } = req.params;
-  const sql = `
-      SELECT trainers.* FROM trainers
-      JOIN employee_trainers ON trainers.id = employee_trainers.trainer_id
-      WHERE employee_trainers.employee_id = ?
-  `;
-  con.query(sql, [employee_id], (err, result) => {
-      if (err) return res.json({ Status: false, Error: "Query Error" });
-      return res.json({ Status: true, Result: result });
-  });
-});
-
-// Endpoint to get trainers assigned to an employee
+// Get employee trainers by employee ID
 router.get('/employee_trainers/:employee_id', (req, res) => {
     const employee_id = req.params.employee_id;
     const sql = `
@@ -140,157 +98,82 @@ router.get('/employee_trainers/:employee_id', (req, res) => {
     });
 });
 
-//----------------------------------------------------------------------------------------------
-
+// Get notifications
 router.get('/notifications', (req, res) => {
-    const cookies = req.headers.cookie;
-    const decodedToken = jwt.verify(cookies.replace("token=", ""), "jwt_secret_key");
-    const userId = decodedToken.id;
-    console.log('Decoded User ID:', userId);
-
-    const sql = `
-    SELECT 
-    id, 
-    message, 
-    created_at 
-    FROM announcements 
-    WHERE employee_id = ? 
-    ORDER BY created_at DESC`;
-
-    con.query(sql, [userId], (err, results) => {
-        if (err) {
-            console.error('Error fetching notifications:', err);
-            return res.status(500).json({ success: false, error: 'Error fetching notifications' });
-        }
-
-        console.log('Fetched Notifications:', results);
-        return res.json({ success: true, notifications: results });
-    });
+    try {
+        const userId = extractUserIdFromToken(req.headers.cookie);
+        const sql = `
+            SELECT id, message, created_at 
+            FROM announcements 
+            WHERE employee_id = ? 
+            ORDER BY created_at DESC
+        `;
+        con.query(sql, [userId], (err, results) => {
+            if (err) return res.status(500).json({ success: false, error: 'Error fetching notifications' });
+            return res.json({ success: true, notifications: results });
+        });
+    } catch (error) {
+        return res.status(401).json({ success: false, error: error.message });
+    }
 });
-//----------------------------
+
+// Get certifications
 router.get('/certifications', (req, res) => {
-    const cookies = req.headers.cookie;
-    const decodedToken = jwt.verify(cookies.replace("token=", ""), "jwt_secret_key");
-    const userId = decodedToken.id;
-    console.log('Decoded User ID:', userId);
-
-    const sql = `
-    SELECT 
-    id, 
-    certificationName, 
-    employeeId 
-    FROM certifications 
-    WHERE employeeId = ? 
-    ORDER BY id DESC`;
-
-    con.query(sql, [userId], (err, results) => {
-        if (err) {
-            console.error('Error fetching certifications:', err);
-            return res.status(500).json({ success: false, error: 'Error fetching certifications' });
-        }
-
-        console.log('Fetched Certifications:', results);
-        return res.json({ success: true, certifications: results });
-    });
+    try {
+        const userId = extractUserIdFromToken(req.headers.cookie);
+        const sql = `
+            SELECT id, certificationName, employeeId 
+            FROM certifications 
+            WHERE employeeId = ? 
+            ORDER BY id DESC
+        `;
+        con.query(sql, [userId], (err, results) => {
+            if (err) return res.status(500).json({ success: false, error: 'Error fetching certifications' });
+            return res.json({ success: true, certifications: results });
+        });
+    } catch (error) {
+        return res.status(401).json({ success: false, error: error.message });
+    }
 });
 
-
-// Endpoint to fetch payroll information based on payment date
+// Get payroll information
 router.get('/payroll', (req, res) => {
-    // Extract user ID from JWT token
-    const cookies = req.headers.cookie;
-    const decodedToken = jwt.verify(cookies.replace("token=", ""), "jwt_secret_key");
-    const userId = decodedToken.id;
-    console.log('Decoded User ID:', userId);
-
-    // Example: Fetch payroll information based on payment date
-    const paymentDate = req.query.paymentDate; // Assuming paymentDate is passed as a query parameter
-    console.log('Requested Payment Date:', paymentDate);
-
-    // SQL query to fetch payroll information based on payment date
-    const sql = `
-    SELECT 
-    id, 
-    employeeId, 
-    salaryAmount, 
-    paymentDate 
-    FROM payroll 
-    WHERE employeeId = ? AND paymentDate = ? 
-    ORDER BY id DESC`;
-
-    // Execute SQL query
-    con.query(sql, [userId, paymentDate], (err, results) => {
-        if (err) {
-            console.error('Error fetching payroll information:', err);
-            return res.status(500).json({ success: false, error: 'Error fetching payroll information' });
-        }
-
-        console.log('Fetched Payroll Information:', results);
-        return res.json({ success: true, payroll: results });
-    });
+    try {
+        const userId = extractUserIdFromToken(req.headers.cookie);
+        const paymentDate = req.query.paymentDate;
+        const sql = `
+            SELECT id, employeeId, salaryAmount, paymentDate 
+            FROM payroll 
+            WHERE employeeId = ? AND paymentDate = ? 
+            ORDER BY id DESC
+        `;
+        con.query(sql, [userId, paymentDate], (err, results) => {
+            if (err) return res.status(500).json({ success: false, error: 'Error fetching payroll information' });
+            return res.json({ success: true, payroll: results });
+        });
+    } catch (error) {
+        return res.status(401).json({ success: false, error: error.message });
+    }
 });
 
+// Submit help and support request
 router.post('/help-support', (req, res) => {
     const { email, name, phoneNumber, description, priority, startDate } = req.body;
-
     if (!email || !name || !phoneNumber || !description || !priority || !startDate) {
         return res.status(400).json({ success: false, error: 'All fields are required' });
     }
-
     const sql = `INSERT INTO help_support (email, name, phoneNumber, description, priority, startDate) VALUES (?, ?, ?, ?, ?, ?)`;
     const values = [email, name, phoneNumber, description, priority, startDate];
-
     con.query(sql, values, (err, results) => {
-        if (err) {
-            console.error('Error inserting help request:', err);
-            return res.status(500).json({ success: false, error: 'Database error' });
-        }
-        console.log('Help request submitted successfully:', results);
+        if (err) return res.status(500).json({ success: false, error: 'Database error' });
         return res.json({ success: true, message: 'Help request submitted successfully' });
     });
 });
 
-
-// Logout Endpoint
+// Logout
 router.get('/logout', (req, res) => {
     res.clearCookie('token');
-    return res.json({Status: true});
+    return res.json({ Status: true });
 });
 
-// Endpoint to fetch payroll information based on payment date
-router.get('/payroll', (req, res) => {
-    // Extract user ID from JWT token
-    const cookies = req.headers.cookie;
-    const decodedToken = jwt.verify(cookies.replace("token=", ""), "jwt_secret_key");
-    const userId = decodedToken.id;
-    console.log('Decoded User ID:', userId);
-
-    // Example: Fetch payroll information based on payment date
-    const paymentDate = req.query.paymentDate; // Assuming paymentDate is passed as a query parameter
-    console.log('Requested Payment Date:', paymentDate);
-
-    // SQL query to fetch payroll information based on payment date
-    const sql = `
-    SELECT 
-    id, 
-    employeeId, 
-    salaryAmount, 
-    paymentDate 
-    FROM payroll 
-    WHERE employeeId = ? AND paymentDate = ? 
-    ORDER BY id DESC`;
-
-    // Execute SQL query
-    con.query(sql, [userId, paymentDate], (err, results) => {
-        if (err) {
-            console.error('Error fetching payroll information:', err);
-            return res.status(500).json({ success: false, error: 'Error fetching payroll information' });
-        }
-
-        console.log('Fetched Payroll Information:', results);
-        return res.json({ success: true, payroll: results });
-    });
-});
-
-export { router as EmployeeRouter}
-
+export { router as EmployeeRouter };
