@@ -29,6 +29,7 @@ import Certifications from './Components/employee/Certifications'
 import CertificationsManagement from './Components/admin/CertificationsManagement'
 import EmployeeHelpSupport from './Components/employee/EmployeeHelpSupport'
 import AdminSupportRequests from './Components/admin/AdminSupportRequests'
+import Payroll from './Components/employee/Payroll'
 
 function App() {
   return (
@@ -46,6 +47,7 @@ function App() {
           <Route path='/employeedashboard/employeenews' element={<EmployeeNews />} />
           <Route path='/employeedashboard/certifications' element={<Certifications />} />
           <Route path='/employeedashboard/employeehelpsupport' element={<EmployeeHelpSupport />} />
+          <Route path='/employeedashboard/payroll' element={<Payroll />} />
           </Route>
           <Route path='/dashboard' element={
           <PrivateRoute>           

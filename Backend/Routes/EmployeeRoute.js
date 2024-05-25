@@ -200,4 +200,44 @@ router.get('/logout', (req, res) => {
     return res.json({Status: true});
 });
 
+//-------------------
+
+
+// Endpoint to fetch payroll information based on payment date
+router.get('/payroll', (req, res) => {
+    // Extract user ID from JWT token
+    const cookies = req.headers.cookie;
+    const decodedToken = jwt.verify(cookies.replace("token=", ""), "jwt_secret_key");
+    const userId = decodedToken.id;
+    console.log('Decoded User ID:', userId);
+
+    // Example: Fetch payroll information based on payment date
+    const paymentDate = req.query.paymentDate; // Assuming paymentDate is passed as a query parameter
+    console.log('Requested Payment Date:', paymentDate);
+
+    // SQL query to fetch payroll information based on payment date
+    const sql = `
+    SELECT 
+    id, 
+    employeeId, 
+    salaryAmount, 
+    paymentDate 
+    FROM payroll 
+    WHERE employeeId = ? AND paymentDate = ? 
+    ORDER BY id DESC`;
+
+    // Execute SQL query
+    con.query(sql, [userId, paymentDate], (err, results) => {
+        if (err) {
+            console.error('Error fetching payroll information:', err);
+            return res.status(500).json({ success: false, error: 'Error fetching payroll information' });
+        }
+
+        console.log('Fetched Payroll Information:', results);
+        return res.json({ success: true, payroll: results });
+    });
+});
+
+
+
 export { router as EmployeeRouter}
