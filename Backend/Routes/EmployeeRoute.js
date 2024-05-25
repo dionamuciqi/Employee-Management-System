@@ -1,6 +1,7 @@
 import express from 'express';
 import con from '../utils/db.js';
 import jwt from 'jsonwebtoken';
+import multer from "multer";
 import bcrypt from 'bcrypt';
 
 const router = express.Router()
@@ -192,15 +193,6 @@ router.get('/certifications', (req, res) => {
         return res.json({ success: true, certifications: results });
     });
 });
-//---------------------
-
-// Logout Endpoint
-router.get('/logout', (req, res) => {
-    res.clearCookie('token');
-    return res.json({Status: true});
-});
-
-//-------------------
 
 
 // Endpoint to fetch payroll information based on payment date
@@ -238,6 +230,67 @@ router.get('/payroll', (req, res) => {
     });
 });
 
+router.post('/help-support', (req, res) => {
+    const { email, name, phoneNumber, description, priority, startDate } = req.body;
 
+    if (!email || !name || !phoneNumber || !description || !priority || !startDate) {
+        return res.status(400).json({ success: false, error: 'All fields are required' });
+    }
+
+    const sql = `INSERT INTO help_support (email, name, phoneNumber, description, priority, startDate) VALUES (?, ?, ?, ?, ?, ?)`;
+    const values = [email, name, phoneNumber, description, priority, startDate];
+
+    con.query(sql, values, (err, results) => {
+        if (err) {
+            console.error('Error inserting help request:', err);
+            return res.status(500).json({ success: false, error: 'Database error' });
+        }
+        console.log('Help request submitted successfully:', results);
+        return res.json({ success: true, message: 'Help request submitted successfully' });
+    });
+});
+
+
+// Logout Endpoint
+router.get('/logout', (req, res) => {
+    res.clearCookie('token');
+    return res.json({Status: true});
+});
+
+// Endpoint to fetch payroll information based on payment date
+router.get('/payroll', (req, res) => {
+    // Extract user ID from JWT token
+    const cookies = req.headers.cookie;
+    const decodedToken = jwt.verify(cookies.replace("token=", ""), "jwt_secret_key");
+    const userId = decodedToken.id;
+    console.log('Decoded User ID:', userId);
+
+    // Example: Fetch payroll information based on payment date
+    const paymentDate = req.query.paymentDate; // Assuming paymentDate is passed as a query parameter
+    console.log('Requested Payment Date:', paymentDate);
+
+    // SQL query to fetch payroll information based on payment date
+    const sql = `
+    SELECT 
+    id, 
+    employeeId, 
+    salaryAmount, 
+    paymentDate 
+    FROM payroll 
+    WHERE employeeId = ? AND paymentDate = ? 
+    ORDER BY id DESC`;
+
+    // Execute SQL query
+    con.query(sql, [userId, paymentDate], (err, results) => {
+        if (err) {
+            console.error('Error fetching payroll information:', err);
+            return res.status(500).json({ success: false, error: 'Error fetching payroll information' });
+        }
+
+        console.log('Fetched Payroll Information:', results);
+        return res.json({ success: true, payroll: results });
+    });
+});
 
 export { router as EmployeeRouter}
+
