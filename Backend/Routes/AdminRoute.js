@@ -18,7 +18,8 @@ router.post('/adminlogin', (req, res) => {
                 "jwt_secret_key", 
                 { expiresIn: "1d" }
             );
-            res.cookie('token', token)
+            res.cookie('token', token);
+            res.cookie('email', email); 
             return res.json({ loginStatus: true });
         } else {
             return res.json({ loginStatus: false, Error: "wrong email or password" });
@@ -511,6 +512,52 @@ router.get('/logout', (req, res) => {
 })
 
 
-//-------------------
+// Endpoint to submit payroll
+router.post('/payroll', (req, res) => {
+    const { employeeId, salaryAmount, paymentDate } = req.body;
+    console.log('Received payroll data:', req.body);
+
+    // Validate input data
+    if (!employeeId || !salaryAmount || !paymentDate) {
+        console.error('Invalid payroll data:', req.body);
+        return res.status(400).json({ success: false, error: 'Invalid payroll data' });
+    }
+
+    // Insert payroll information into the database
+    const sql = 'INSERT INTO payroll (employeeId, salaryAmount, paymentDate) VALUES (?, ?, ?)';
+    con.query(sql, [employeeId, salaryAmount, paymentDate], (err, result) => {
+        if (err) {
+            console.error('Error inserting payroll:', err);
+            return res.status(500).json({ success: false, error: 'Error inserting payroll' });
+        }
+        console.log('Payroll submitted successfully with ID:', result.insertId);
+        return res.json({ success: true, payroll: { id: result.insertId, employeeId, salaryAmount, paymentDate } });
+    });
+});
+
+// Route to update salary
+router.patch('/payroll/:employeeId', (req, res) => {
+    const employeeId = req.params.employeeId;
+    const { salaryAmount } = req.body;
+    console.log('Received salary update data:', req.body);
+
+    // Validate input data
+    if (!salaryAmount) {
+        console.error('Invalid salary update data:', req.body);
+        return res.status(400).json({ success: false, error: 'Invalid salary update data' });
+    }
+
+    // Update salary in the database
+    const sql = 'UPDATE payroll SET salaryAmount = ? WHERE employeeId = ?';
+    con.query(sql, [salaryAmount, employeeId], (err, result) => {
+        if (err) {
+            console.error('Error updating salary:', err);
+            return res.status(500).json({ success: false, error: 'Error updating salary' });
+        }
+        console.log('Salary updated successfully for employee:', employeeId);
+        return res.json({ success: true, message: 'Salary updated successfully' });
+    });
+});
+
 
 export { router as adminRouter };

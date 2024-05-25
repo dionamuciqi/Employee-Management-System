@@ -110,7 +110,7 @@ const EmployeeDashboard = () => {
               </li>
               <li className="w-100">
                 <Link
-                  to="/employeedashboard/employeepayroll"
+                  to="/employeedashboard/payroll"
                   className="nav-link px-0 align-middle text-white"
                 >
                   <i className="fs-4 bi-cash ms-2"></i>
