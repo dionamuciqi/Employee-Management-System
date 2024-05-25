@@ -18,7 +18,8 @@ router.post('/adminlogin', (req, res) => {
                 "jwt_secret_key", 
                 { expiresIn: "1d" }
             );
-            res.cookie('token', token)
+            res.cookie('token', token);
+            res.cookie('email', email); 
             return res.json({ loginStatus: true });
         } else {
             return res.json({ loginStatus: false, Error: "wrong email or password" });
