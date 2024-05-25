@@ -21,7 +21,7 @@ const PayrollManagement = () => {
 
   const handlePayrollSubmit = (e) => {
     e.preventDefault();
-    axios.post('http://localhost:3000/api/payroll', {
+    axios.post('http://localhost:3000/auth/payroll', {
       employeeId: employeeId,
       salaryAmount: salaryAmount,
       paymentDate: paymentDate
@@ -44,7 +44,7 @@ const PayrollManagement = () => {
       return;
     }
 
-    axios.patch(`http://localhost:3000/api/payroll/${employeeId}`, { salaryAmount: salaryAmount })
+    axios.patch(`http://localhost:3000/auth/payroll/${employeeId}`, { salaryAmount: salaryAmount })
       .then(response => {
         console.log('Salary updated successfully!', response.data);
         // Optionally, you can reset the salary input field after successful update
