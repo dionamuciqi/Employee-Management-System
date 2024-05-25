@@ -8,19 +8,22 @@ const CertificationsManagement = () => {
   const [certifications, setCertifications] = useState([]);
 
   useEffect(() => {
-    fetchCertifications();
-  }, []);
+    // Load certifications from localStorage when the component mounts
+    const storedCertifications = JSON.parse(localStorage.getItem('certifications')) || [];
+    setCertifications(storedCertifications);
 
-  const fetchCertifications = () => {
+    // Fetch certifications from the server when the component mounts
     axios.get('http://localhost:3000/auth/certifications')
       .then(response => {
         console.log('Fetched certifications:', response.data);
         setCertifications(response.data);
+        // Store certifications data in localStorage
+        localStorage.setItem('certifications', JSON.stringify(response.data));
       })
       .catch(error => {
         console.error('There was an error fetching the certifications data!', error);
       });
-  };
+  }, []);
 
   const handleEmployeeIdChange = (e) => {
     setEmployeeId(e.target.value);
@@ -51,11 +54,16 @@ const CertificationsManagement = () => {
         setEmployeeId('');
         setCertificationName('');
         console.log('Certification added successfully!');
+
+        // Update localStorage with the new certifications data
+        const updatedCertifications = [...certifications, response.data.certification];
+        localStorage.setItem('certifications', JSON.stringify(updatedCertifications));
       })
       .catch(error => {
         console.error('There was an error adding the certification!', error);
       });
   };
+
   return (
     <div className="container px-5 mt-5">
       <div className="card mb-4">
