@@ -24,6 +24,7 @@ import AttendanceManagement from './Components/admin/AttendanceManagement'
 import LeaveManagement from './Components/admin/LeaveManagement'
 import NotificationsandAnnouncements from './Components/admin/NotificationsandAnnouncements'
 import PayrollManagement from './Components/admin/PayrollManagement'
+import EmployeeDetail from './Components/employee/EmployeeDetail'
 import EmployeeNews from './Components/employee/EmployeeNews'
 import Certifications from './Components/employee/Certifications'
 import CertificationsManagement from './Components/admin/CertificationsManagement'
@@ -37,12 +38,12 @@ function App() {
       <Routes>
           <Route path='/' element={<Start />}></Route>
           <Route path='/adminlogin' element={<Login />}></Route>
-         
           <Route path='/employee_login' element={<EmployeeLogin />}></Route>
           <Route path='/employeedashboard' element={
-          <PrivateRoute>
-          <EmployeeDashboard />
+            <PrivateRoute>
+          <EmployeeDashboard />  
           </PrivateRoute>}>
+          <Route path='/employeedashboard/employeedetail/:id' element={<EmployeeDetail />} />
           <Route path='/employeedashboard/employeetraining' element={<EmployeeTraining/>} />
           <Route path='/employeedashboard/employeenews' element={<EmployeeNews />} />
           <Route path='/employeedashboard/certifications' element={<Certifications />} />
@@ -51,7 +52,7 @@ function App() {
           </Route>
           <Route path='/dashboard' element={
           <PrivateRoute>           
-            <Dashboard />
+            <Dashboard /> 
           </PrivateRoute>}>   
           <Route path='' element={<Home />}></Route>
           <Route path='/dashboard/employee' element={<Employee />}></Route>

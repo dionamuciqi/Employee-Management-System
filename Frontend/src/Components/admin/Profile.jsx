@@ -1,40 +1,58 @@
-import { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
+import profileImage from '/public/Images/adminphoto.png';
 
-const Profile = () => {
-  const [adminData, setAdminData] = useState(null);
+const AdminProfile = () => {
+    const [admin, setAdmin] = useState("");
+    const getCookieValue = (name) => (
+        document.cookie.match('(^|;)\\s*' + name + '\\s*=\\s*([^;]+)')?.pop() || ''
+    );
+    const navigate = useNavigate();
 
-  useEffect(() => {
-    // Fetch admin data from API
-    axios.get('http://localhost:3000/api/admin')
-      .then(response => {
-        setAdminData(response.data);
-      })
-      .catch(error => {
-        console.error('There was an error fetching admin data!', error);
-      });
-  }, []);
+    useEffect(() => {
+        setAdmin(getCookieValue('email'));
+    }, []);
 
-  return (
-    <div className="container px-5 mt-5">
-      <h2 className="mt-5">Admin Profile</h2>
-      {adminData ? (
-        <div className="card mb-4">
-          <div className="card-header">
-            <h4>Admin Information</h4>
-          </div>
-          <div className="card-body">
-            <p><strong>Name:</strong> {adminData.name}</p>
-            <p><strong>Email:</strong> {adminData.email}</p>
-            {/* Add more admin data fields here */}
-          </div>
+    const handleLogout = () => {
+        axios.get('http://localhost:3000/admin/logout')
+            .then(result => {
+                if(result.data.Status) {
+                    localStorage.removeItem("valid");
+                    navigate('/');
+                }
+            })
+            .catch(err => console.log(err));
+    };
+
+    return (
+        <div className="container px-5 mt-5">
+            <div className="row justify-content-center">
+                <div className="col-md-6 text-center">
+                    <div className="card">
+                        <img src={profileImage} className="card-img-top rounded-circle" alt="Profile Picture"/>
+                        <div className="card-body">
+                        <div className="row justify-content-center mt-3">
+                          <div className="col-md-6 text-center">
+                            <div className='d-flex justify-content-center flex-column align-items-center'>
+                              <div className='d-flex align-items-center flex-column mt-3'>
+                                <h3>Email: {decodeURIComponent(admin)}</h3>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        </div>
+                        <div className="card-footer d-flex justify-content-center">
+                            <button className='btn btn-primary me-2'>Edit</button>
+                            <button className='btn btn-danger' onClick={handleLogout}>Logout</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
         </div>
-      ) : (
-        <p>Loading admin data...</p>
-      )}
-    </div>
-  );
+    );
 };
 
-export default Profile;
+export default AdminProfile;
