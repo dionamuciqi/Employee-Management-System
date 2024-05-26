@@ -122,6 +122,16 @@ const Dashboard = () => {
               </li>
               <li className="w-100">
                 <Link
+                  to="/dashboard/healthservicesmanagement"
+                  className="nav-link px-0 align-middle text-white"
+                >
+                  <i className="fs-4 bi-heart-pulse ms-2"></i>
+                  <span className="ms-2 d-none d-sm-inline">Health Service Management</span>
+                </Link>
+              </li>
+
+              <li className="w-100">
+                <Link
                   to="/dashboard/notificationsandannouncements"
                   className="nav-link px-0 align-middle text-white"
                 >

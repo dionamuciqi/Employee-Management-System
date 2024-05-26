@@ -95,6 +95,15 @@ const EmployeeDashboard = () => {
               </li>
               <li className="w-100">
                 <Link
+                  to="/employeedashboard/healthservices"
+                  className="nav-link px-0 align-middle text-white"
+                >
+                  <i className="fs-4 bi-heart-pulse ms-2"></i>
+                  <span className="ms-2 d-none d-sm-inline">Service of Health</span>
+                </Link>
+              </li>
+              <li className="w-100">
+                <Link
                   to="/employeedashboard/employeeperformancereviews"
                   className="nav-link px-0 align-middle text-white"
                 >
