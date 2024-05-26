@@ -1,5 +1,6 @@
 import { Model, DataTypes } from 'sequelize';
 import sequelize from '../utils/sequelize.js';
+import Employee from './employee.js'; 
 
 class Payroll extends Model {}
 
@@ -11,21 +12,24 @@ Payroll.init({
   },
   employeeId: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: false,
+    references: {
+      model: Employee, 
+      key: 'id'
+    }
   },
-  salaryAmount: {
+  amount: {
     type: DataTypes.STRING(50),
     allowNull: false
   },
-  paymentDate: {
-    type: DataTypes.DATE,
-    allowNull: false
-  }
 }, {
   sequelize,
   modelName: 'Payroll',
   tableName: 'payroll',
   timestamps: false
 });
+
+
+Payroll.belongsTo(Employee, { foreignKey: 'employeeId' });
 
 export default Payroll;

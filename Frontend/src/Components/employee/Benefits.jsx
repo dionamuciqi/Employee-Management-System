@@ -1,25 +1,25 @@
 import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const Payroll = () => {
-  const [payrolls, setPayrolls] = useState([]);
+const Benefits = () => {
+  const [benefits, setBenefits] = useState([]);
 
   useEffect(() => {
-    fetchPayrolls();
+    fetchBenefits();
   }, []);
 
-  const fetchPayrolls = () => {
-    axios.get('http://localhost:3000/employee/payrolls', { withCredentials: true })
+  const fetchBenefits = () => {
+    axios.get('http://localhost:3000/employee/benefits', { withCredentials: true })
       .then(response => {
-        console.log('Fetched payrolls response:', response.data);
+        console.log('Fetched benefits response:', response.data);
         if (response.data.success) {
-          setPayrolls(response.data.payrolls);
+          setBenefits(response.data.benefits);
         } else {
-          console.error('Error fetching payrolls:', response.data.error);
+          console.error('Error fetching benefits:', response.data.error);
         }
       })
       .catch(error => {
-        console.error('Error fetching payrolls:', error);
+        console.error('Error fetching benefits:', error);
       });
   };
 
@@ -29,23 +29,23 @@ const Payroll = () => {
         <div className="col-md-12">
           <div className="card shadow-sm">
             <div className="card-header bg-secondary text-white d-flex justify-content-between align-items-center">
-              <h4 className="mb-0">Payroll List</h4>
+              <h4 className="mb-0">Benefits List</h4>
               <i className="bi bi-gift-fill"></i>
             </div>
             <div className="card-body p-4">
               <ul className="list-group">
-                {payrolls.map(payroll => (
-                  <li className="list-group-item d-flex justify-content-between align-items-center" key={payroll.id}>
+                {benefits.map(benefit => (
+                  <li className="list-group-item d-flex justify-content-between align-items-center" key={benefit.id}>
                     <div>
-                      <h5 className="mb-1">Amount: {payroll.amount}</h5>
-                      <p className="mb-0">Employee ID: {payroll.employeeId}</p>
+                      <h5 className="mb-1">Amount: {benefit.amount}</h5>
+                      <p className="mb-0">Employee ID: {benefit.employeeId}</p>
                     </div>
                   </li>
                 ))}
               </ul>
-              {payrolls.length === 0 && (
+              {benefits.length === 0 && (
                 <div className="alert text-center mt-3">
-                  No Payroll Available.
+                  No Benefits Available.
                 </div>
               )}
             </div>
@@ -56,4 +56,4 @@ const Payroll = () => {
   );
 };
 
-export default Payroll;
+export default Benefits;
