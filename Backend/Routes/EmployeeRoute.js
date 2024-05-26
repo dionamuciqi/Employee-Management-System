@@ -145,6 +145,25 @@ router.get('/certifications', async (req, res) => {
         return res.status(401).json({ success: false, error: error.message });
     }
 });
+//-------------Leavess--------------------
+// Get leaves for the authenticated employee
+router.get('/leaves', (req, res) => {
+    try {
+        const userId = extractUserIdFromToken(req.headers.cookie);
+        const sql = `
+            SELECT id, leaveType, startDate, endDate, employeeId 
+            FROM leaves 
+            WHERE employeeId = ? 
+            ORDER BY id DESC
+        `;
+        con.query(sql, [userId], (err, results) => {
+            if (err) return res.status(500).json({ success: false, error: 'Error fetching leaves' });
+            return res.json({ success: true, leaves: results });
+        });
+    } catch (error) {
+        return res.status(401).json({ success: false, error: error.message });
+    }
+});
 
 router.get('/payroll', async (req, res) => {
     try {
