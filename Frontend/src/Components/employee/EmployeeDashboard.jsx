@@ -110,6 +110,15 @@ const EmployeeDashboard = () => {
               </li>
               <li className="w-100">
                 <Link
+                  to="/employeedashboard/myleaves"
+                  className="nav-link px-0 align-middle text-white"
+                >
+                  <i className="fs-4 bi-calendar3 ms-2"></i>
+                  <span className="ms-2 d-none d-sm-inline">My Leaves</span>
+                </Link>
+              </li>
+              <li className="w-100">
+                <Link
                   to="/employeedashboard/payroll"
                   className="nav-link px-0 align-middle text-white"
                 >

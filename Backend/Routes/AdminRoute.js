@@ -510,8 +510,27 @@ router.get('/logout', (req, res) => {
     res.clearCookie('token')
     return res.json({Status:true})
 })
+//--------Leaves-------------
+router.post('/leaves', (req, res) => {
+    const { leaveType, startDate, endDate, employeeId } = req.body;
+    console.log('Received request data:', req.body);
 
+    // Validate input data
+    if (!leaveType || !startDate || !endDate || !employeeId) {
+        console.error('Invalid request data:', req.body);
+        return res.status(400).json({ success: false, error: 'Invalid request data' });
+    }
 
+    const sql = 'INSERT INTO leaves (leaveType, startDate, endDate, employeeId) VALUES (?, ?, ?, ?)';
+    con.query(sql, [leaveType, startDate, endDate, employeeId], (err, result) => {
+        if (err) {
+            console.error('Error inserting leave:', err);
+            return res.status(500).json({ success: false, error: 'Error inserting leave' });
+        }
+        console.log('Leave inserted successfully with ID:', result.insertId);
+        return res.json({ success: true, leave: { id: result.insertId, leaveType, startDate, endDate, employeeId } });
+    });
+});
 // Endpoint to submit payroll
 router.post('/payroll', (req, res) => {
     const { employeeId, salaryAmount, paymentDate } = req.body;
