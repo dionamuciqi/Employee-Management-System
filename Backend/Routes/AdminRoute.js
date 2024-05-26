@@ -16,7 +16,7 @@ import HelpSupport from '../models/help_support.js';
 import Payroll from '../models/payroll.js';
 import TrainingMode from '../models/training_modes.js';
 import HealthService from '../models/healthservice.js';
-
+import Leaves from '../models/leaves.js';
 
 const router = express.Router()
 
@@ -316,7 +316,7 @@ router.get('/department', async (req, res) => {
 //     console.log('userId',userId)
 //     // Nuk vjen kjo info ne front eshte ne jwt te userit qe eshte i kyqur const employeeId = req.user.id; // Assuming you have user info in the request object
 //     const sql = `SELECT t.* FROM trainers t
-// 	                inner join employee_trainers et on et.trainer_id = t.id
+//                  inner join employee_trainers et on et.trainer_id = t.id
 //                  where et.employee_id = ?`;
 //     con.query(sql, [userId], (err, result) => {
 //         if (err) return res.json({ Status: false, Error: "Query Error" });
@@ -358,50 +358,51 @@ router.get('/employee/trainings', async (req, res) => {
 });
 
 
-router.post('/announcements', async (req, res) => {
-    try {
-        const { message } = req.body;
+router.post('/announcements', (req, res) => {
+    const { message } = req.body;
+    console.log('Received request data:', req.body);
 
-        if (!message) {
-            console.error('Invalid request data:', req.body);
-            return res.status(400).json({ success: false, error: 'Message is required' });
+    if (!message) {
+        console.error('Invalid request data:', req.body);
+        return res.status(400).json({ success: false, error: 'Message is required' });
+    }
+
+    const sql = 'INSERT INTO announcements (message) VALUES (?)';
+    con.query(sql, [message], (err, result) => {
+        if (err) {
+            console.error('Error inserting announcement:', err);
+            return res.status(500).json({ success: false, error: 'Error inserting announcement' });
         }
-        const announcement = await Announcement.create({ message });
-
-        console.log('Announcement inserted successfully with ID:', announcement.id);
-        return res.json({ success: true, notification: { id: announcement.id, message } });
-    } catch (error) {
-        console.error('Error inserting announcement:', error);
-        return res.status(500).json({ success: false, error: 'Error inserting announcement' });
-    }
+        console.log('Announcement inserted successfully with ID:', result.insertId);
+        return res.json({ success: true, notification: { id: result.insertId, message } });
+    });
 });
 
-router.get('/announcements', async (req, res) => {
-    try {
-        const announcements = await Announcement.findAll({
-            attributes: ['id', 'message', 'created_at', 'employee_id'] 
-        });
-
-        console.log('Announcements fetched successfully:', announcements);
-        return res.json({ success: true, notifications: announcements });
-    } catch (error) {
-        console.error('Error fetching announcements:', error);
-        return res.status(500).json({ success: false, error: 'Error fetching announcements' });
-    }
+router.get('/announcements', (req, res) => {
+    const sql = 'SELECT id, message, created_at FROM announcements'; // Include creation time in the query
+    con.query(sql, (err, results) => {
+        if (err) {
+            console.error('Error fetching announcements:', err);
+            return res.status(500).json({ success: false, error: 'Error fetching announcements' });
+        }
+        console.log('Announcements fetched successfully:', results);
+        return res.json({ success: true, notifications: results });
+    });
 });
 
 
-router.delete('/clearnotifications', async (req, res) => {
-    try {
-      await Announcement.destroy({ truncate: true });
-  
+router.delete('/clearnotifications', (req, res) => {
+    const sql = 'DELETE FROM announcements';
+    con.query(sql, (err, result) => {
+      if (err) {
+        console.error('Error clearing notifications:', err);
+        return res.status(500).json({ success: false, error: 'Error clearing notifications' });
+      }
       console.log('Notifications cleared successfully!');
       return res.json({ success: true, message: 'Notifications cleared successfully' });
-    } catch (error) {
-      console.error('Error clearing notifications:', error);
-      return res.status(500).json({ success: false, error: 'Error clearing notifications' });
-    }
+    });
   });
+
   
 
  //-------------------
@@ -450,26 +451,54 @@ router.get('/healthservices', async (req, res) => {
     }
 });
 
-router.post('/payroll', async (req, res) => {
+//--------Leaves-------------
+router.post('/leaves', async (req, res) => {
+    const { leaveType, startDate, endDate, employeeId } = req.body;
+    console.log('Received request data:', req.body);
+
+
+    // Validate input data
+    if (!leaveType || !startDate || !endDate || !employeeId) {
+        console.error('Invalid request data:', req.body);
+        return res.status(400).json({ success: false, error: 'Invalid request data' });
+    }
+
     try {
-        const { employeeId, salaryAmount, paymentDate } = req.body;
-        console.log('Received payroll data:', req.body);
+        // Create a new leave record using Sequelize
+        const newLeave = await Leaves.create({
+            leaveType,
+            startDate,
+            endDate,
+            employeeId
+        });
 
-        if (!employeeId || !salaryAmount || !paymentDate) {
-            console.error('Invalid payroll data:', req.body);
-            return res.status(400).json({ success: false, error: 'Invalid payroll data' });
-        }
-
-        const payroll = await Payroll.create({ employeeId, salaryAmount, paymentDate });
-
-        console.log('Payroll submitted successfully with ID:', payroll.id);
-        return res.json({ success: true, payroll });
+        console.log('Leave inserted successfully with ID:', newLeave.id);
+        return res.json({ success: true, leave: newLeave });
     } catch (error) {
-        console.error('Error inserting payroll:', error);
-        return res.status(500).json({ success: false, error: 'Error inserting payroll' });
+        console.error('Error inserting leave:', error);
+        return res.status(500).json({ success: false, error: 'Error inserting leave' });
     }
 });
 
+router.post('/payrolls', (req, res) => {
+    const { employeeId, amount } = req.body;
+    console.log('Received request data:', req.body);
+  
+    if (!employeeId || !amount) {
+      console.error('Invalid request data:', req.body);
+      return res.status(400).json({ success: false, error: 'Employee ID and Amount are required' });
+    }
+  
+    const sql = 'INSERT INTO payroll (employeeId, amount) VALUES (?, ?)';
+    con.query(sql, [employeeId, amount], (err, result) => {
+      if (err) {
+        console.error('Error inserting payroll:', err);
+        return res.status(500).json({ success: false, error: 'Error inserting payroll' });
+      }
+      console.log('Payroll inserted successfully with ID:', result.insertId);
+      return res.json({ success: true, payroll: { id: result.insertId, employeeId, amount } });
+    });
+  });
 
 router.get('/support-requests', async (req, res) => {
     try {
@@ -493,58 +522,30 @@ router.delete('/clearall', async (req, res) => {
     }
 });
 
+router.post('/benefits', (req, res) => {
+    const { employeeId, amount } = req.body;
+    console.log('Received request data:', req.body);
+
+    if (!employeeId || !amount) {
+        console.error('Invalid request data:', req.body);
+        return res.status(400).json({ success: false, error: 'Employee ID and Amount are required' });
+    }
+
+    const sql = 'INSERT INTO benefits (employeeId, amount) VALUES (?, ?)';
+    con.query(sql, [employeeId, amount], (err, result) => {
+        if (err) {
+            console.error('Error inserting benefit:', err);
+            return res.status(500).json({ success: false, error: 'Error inserting benefit' });
+        }
+        console.log('Benefit inserted successfully with ID:', result.insertId);
+        return res.json({ success: true, benefit: { id: result.insertId, employeeId, amount } });
+    });
+});
+  
+  
 router.get('/logout', (req, res) => {
     res.clearCookie('token')
     return res.json({Status:true})
 })
-
-
-// Endpoint to submit payroll
-router.post('/payroll', (req, res) => {
-    const { employeeId, salaryAmount, paymentDate } = req.body;
-    console.log('Received payroll data:', req.body);
-
-    // Validate input data
-    if (!employeeId || !salaryAmount || !paymentDate) {
-        console.error('Invalid payroll data:', req.body);
-        return res.status(400).json({ success: false, error: 'Invalid payroll data' });
-    }
-
-    // Insert payroll information into the database
-    const sql = 'INSERT INTO payroll (employeeId, salaryAmount, paymentDate) VALUES (?, ?, ?)';
-    con.query(sql, [employeeId, salaryAmount, paymentDate], (err, result) => {
-        if (err) {
-            console.error('Error inserting payroll:', err);
-            return res.status(500).json({ success: false, error: 'Error inserting payroll' });
-        }
-        console.log('Payroll submitted successfully with ID:', result.insertId);
-        return res.json({ success: true, payroll: { id: result.insertId, employeeId, salaryAmount, paymentDate } });
-    });
-});
-
-// Route to update salary
-router.patch('/payroll/:employeeId', (req, res) => {
-    const employeeId = req.params.employeeId;
-    const { salaryAmount } = req.body;
-    console.log('Received salary update data:', req.body);
-
-    // Validate input data
-    if (!salaryAmount) {
-        console.error('Invalid salary update data:', req.body);
-        return res.status(400).json({ success: false, error: 'Invalid salary update data' });
-    }
-
-    // Update salary in the database
-    const sql = 'UPDATE payroll SET salaryAmount = ? WHERE employeeId = ?';
-    con.query(sql, [salaryAmount, employeeId], (err, result) => {
-        if (err) {
-            console.error('Error updating salary:', err);
-            return res.status(500).json({ success: false, error: 'Error updating salary' });
-        }
-        console.log('Salary updated successfully for employee:', employeeId);
-        return res.json({ success: true, message: 'Salary updated successfully' });
-    });
-});
-
 
 export { router as adminRouter };

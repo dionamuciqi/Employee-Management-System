@@ -20,6 +20,11 @@ const MyLeaves = () => {
       });
   }, []);
 
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
   return (
     <div className="container px-5 mt-5">
       <div className="row">
@@ -35,7 +40,7 @@ const MyLeaves = () => {
                   <li className="list-group-item d-flex justify-content-between align-items-center" key={leave.id}>
                     <div>
                       <h5 className="mb-1">{leave.leaveType}</h5>
-                      <p className="mb-0">From: {leave.startDate} To: {leave.endDate}</p>
+                      <p className="mb-0">From: {formatDate(leave.startDate)} To: {formatDate(leave.endDate)}</p>
                     </div>
                   </li>
                 ))}

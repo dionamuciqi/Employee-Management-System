@@ -78,6 +78,11 @@ const LeaveManagement = () => {
       });
   };
 
+  const formatDate = (dateString) => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' };
+    return new Date(dateString).toLocaleDateString(undefined, options);
+  };
+
   return (
     <div className="container px-5 mt-5">
       <div className="card mb-4">
@@ -138,7 +143,7 @@ const LeaveManagement = () => {
           <ul className="list-group">
             {leaves.map(leave => (
               <li className="list-group-item" key={leave.id}>
-                <span>{leave.leaveType} (Employee ID: {leave.employeeId}, Start Date: {leave.startDate}, End Date: {leave.endDate})</span>
+                <span>{leave.leaveType} (Employee ID: {leave.employeeId}, Start Date: {formatDate(leave.startDate)}, End Date: {formatDate(leave.endDate)})</span>
               </li>
             ))}
           </ul>

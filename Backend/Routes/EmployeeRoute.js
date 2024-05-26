@@ -117,21 +117,31 @@ router.get('/employee_trainers/:employee_id', (req, res) => {
 });
 
 // Get notifications
-router.get('/announcements', async (req, res) => {
-    try {
-        const userId = extractUserIdFromToken(req.headers.cookie);
+router.get('/notifications', (req, res) => {
+    const cookies = req.headers.cookie;
+    const decodedToken = jwt.verify(cookies.replace("token=", ""), "jwt_secret_key");
+    const userId = decodedToken.id;
+    console.log('Decoded User ID:', userId);
 
-        const notifications = await Announcement.findAll({
-            attributes: ['id', 'message', 'created_at'],
-            where: { employee_id: userId },
-            order: [['created_at', 'DESC']]
-        });
+    const sql = `
+    SELECT 
+    id, 
+    message, 
+    created_at 
+    FROM announcements 
+    WHERE employee_id = ? 
+    ORDER BY created_at DESC`;
 
-        res.json({ success: true, notifications });
-    } catch (error) {
-        res.status(401).json({ success: false, error: error.message });
-    }
-}); 
+    con.query(sql, [userId], (err, results) => {
+        if (err) {
+            console.error('Error fetching notifications:', err);
+            return res.status(500).json({ success: false, error: 'Error fetching notifications' });
+        }
+
+        console.log('Fetched Notifications:', results);
+        return res.json({ success: true, notifications: results });
+    });
+});
 
 // Get certifications
 router.get('/certifications', async (req, res) => {
@@ -180,22 +190,17 @@ router.get('/leaves', (req, res) => {
     }
 });
 
-router.get('/payroll', async (req, res) => {
-    try {
-        const userId = extractUserIdFromToken(req.headers.cookie);
-        const paymentDate = req.query.paymentDate;
-        const payroll = await Payroll.findAll({
-            where: { 
-                employeeId: userId,
-                paymentDate: paymentDate
-            },
-            order: [['id', 'DESC']]
-        });
-        return res.json({ success: true, payroll });
-    } catch (error) {
-        return res.status(401).json({ success: false, error: error.message });
-    }
-});
+router.get('/payrolls', (req, res) => {
+    const sql = 'SELECT id, employeeId, amount FROM payroll';
+    con.query(sql, (err, results) => {
+      if (err) {
+        console.error('Error fetching payrolls:', err);
+        return res.status(500).json({ success: false, error: 'Error fetching payrolls' });
+      }
+      console.log('Payrolls fetched successfully:', results);
+      return res.json({ success: true, payrolls: results });
+    });
+  });
 
 router.post('/help-support', async (req, res) => {
     try {
@@ -217,7 +222,17 @@ router.post('/help-support', async (req, res) => {
         return res.status(500).json({ success: false, error: 'Database error' });
     }
 });
-
+router.get('/benefits', (req, res) => {
+    const sql = 'SELECT id, employeeId, amount FROM benefits';
+    con.query(sql, (err, results) => {
+        if (err) {
+            console.error('Error fetching benefits:', err);
+            return res.status(500).json({ success: false, error: 'Error fetching benefits' });
+        }
+        console.log('Benefits fetched successfully:', results);
+        return res.json({ success: true, benefits: results });
+    });
+});
 // Logout
 router.get('/logout', (req, res) => {
     res.clearCookie('token');
