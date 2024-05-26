@@ -1,65 +1,42 @@
-import axios from 'axios';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import axios from 'axios';
 
 const EmployeeProfile = () => {
-    const [employee, setEmployee] = useState({});
-    const [trainers, setTrainers] = useState([]);
-    const { id } = useParams();
-    const navigate = useNavigate();
+  const [employee, setEmployee] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
-    useEffect(() => {
-        axios.get(`http://localhost:3000/employee/detail/${id}`)
-            .then(result => {
-                setEmployee(result.data[0]);
-                return axios.get(`http://localhost:3000/employee_trainers/${id}`);
-            })
-            .then(result => {
-                if (result.data.Status) {
-                    setTrainers(result.data.Result);
-                }
-            })
-            .catch(err => console.log(err));
-    }, [id]);
+  useEffect(() => {
+    axios.get('http://localhost:3000/employee/profile')
+      .then(response => {
+        setEmployee(response.data);
+        setLoading(false);
+      })
+      .catch(() => {
+        setError('Failed to fetch profile');
+        setLoading(false);
+      });
+  }, []);
 
-    const handleLogout = () => {
-        axios.get('http://localhost:3000/employee/logout')
-            .then(result => {
-                if (result.data.Status) {
-                    localStorage.removeItem("valid");
-                    navigate('/');
-                }
-            }).catch(err => console.log(err));
-    };
+  if (loading) return <div>Loading...</div>;
+  if (error) return <div>{error}</div>;
 
-    return (
-        <div>
-            <div className="p-2 d-flex justify-content-center shadow">
-                <h4>Employee Management System</h4>
-            </div>
-            <div className='d-flex justify-content-center flex-column align-items-center mt-3'>
-                <img src={`http://localhost:3000/Images/${employee.image}`} className='emp_det_image' alt='Employee' />
-                <div className='d-flex align-items-center flex-column mt-5'>
-                    <h3>Name: {employee.name}</h3>
-                    <h3>Email: {employee.email}</h3>
-                    <h3>Salary: ${employee.salary}</h3>
-                </div>
-                <div>
-                    <button className='btn btn-primary me-2'>Edit</button>
-                    <button className='btn btn-danger' onClick={handleLogout}>Logout</button>
-                </div>
-                <div className='d-flex align-items-center flex-column mt-5'>
-                    <h3>Trainers:</h3>
-                    {trainers.map(trainer => (
-                        <div key={trainer.id}>
-                            <h4>{trainer.name}</h4>
-                            <p>Qualification: {trainer.qualification}</p>
-                        </div>
-                    ))}
-                </div>
-            </div>
+  return (
+    <div className="container mt-4">
+      <h2>Profile</h2>
+      {employee && (
+        <div className="card">
+          <div className="card-body">
+            <h5 className="card-title">{employee.name}</h5>
+            <p className="card-text"><strong>Email:</strong> {employee.email}</p>
+            <p className="card-text"><strong>Salary:</strong> ${employee.salary}</p>
+            <p className="card-text"><strong>Address:</strong> {employee.address}</p>
+            {employee.image && <img src={employee.image} alt="Profile" className="img-thumbnail" />}
+          </div>
         </div>
-    );
+      )}
+    </div>
+  );
 };
 
 export default EmployeeProfile;

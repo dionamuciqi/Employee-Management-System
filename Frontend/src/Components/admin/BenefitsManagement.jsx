@@ -2,26 +2,26 @@ import { useState, useEffect } from 'react';
 import axios from 'axios';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
-const PayrollManagement = () => {
+const BenefitsManagement = () => {
   const [employeeId, setEmployeeId] = useState('');
   const [amount, setAmount] = useState('');
-  const [payrolls, setPayrolls] = useState([]);
+  const [benefits, setBenefits] = useState([]);
 
   useEffect(() => {
-    // Load payrolls from localStorage when the component mounts
-    const storedPayrolls = JSON.parse(localStorage.getItem('payrolls')) || [];
-    setPayrolls(storedPayrolls);
+    // Load benefits from localStorage when the component mounts
+    const storedBenefits = JSON.parse(localStorage.getItem('benefits')) || [];
+    setBenefits(storedBenefits);
 
-    // Fetch payrolls from the server when the component mounts
-    axios.get('http://localhost:3000/auth/payrolls')
+    // Fetch benefits from the server when the component mounts
+    axios.get('http://localhost:3000/auth/benefits')
       .then(response => {
-        console.log('Fetched payrolls:', response.data);
-        setPayrolls(response.data.payrolls);
-        // Store payroll data in localStorage
-        localStorage.setItem('payrolls', JSON.stringify(response.data.payrolls));
+        console.log('Fetched benefits:', response.data);
+        setBenefits(response.data.benefits);
+        // Store benefits data in localStorage
+        localStorage.setItem('benefits', JSON.stringify(response.data.benefits));
       })
       .catch(error => {
-        console.error('There was an error fetching the payrolls data!', error);
+        console.error('There was an error fetching the benefits data!', error);
       });
   }, []);
 
@@ -33,34 +33,34 @@ const PayrollManagement = () => {
     setAmount(e.target.value);
   };
 
-  const handleAddPayroll = (e) => {
+  const handleAddBenefit = (e) => {
     e.preventDefault();
     if (!employeeId.trim() || !amount.trim()) {
       console.error('Employee ID and Amount cannot be empty!');
       return;
     }
 
-    const newPayroll = {
+    const newBenefit = {
       employeeId: employeeId,
       amount: amount
     };
 
-    console.log('Sending request data:', newPayroll);
+    console.log('Sending request data:', newBenefit);
 
-    axios.post('http://localhost:3000/auth/payrolls', newPayroll)
+    axios.post('http://localhost:3000/auth/benefits', newBenefit)
       .then(response => {
         console.log('Response from server:', response.data);
-        setPayrolls(prevPayrolls => [...prevPayrolls, response.data.payroll]);
+        setBenefits(prevBenefits => [...prevBenefits, response.data.benefit]);
         setEmployeeId('');
         setAmount('');
-        console.log('Payroll added successfully!');
+        console.log('Benefit added successfully!');
 
-        // Update localStorage with the new payrolls data
-        const updatedPayrolls = [...payrolls, response.data.payroll];
-        localStorage.setItem('payrolls', JSON.stringify(updatedPayrolls));
+        // Update localStorage with the new benefits data
+        const updatedBenefits = [...benefits, response.data.benefit];
+        localStorage.setItem('benefits', JSON.stringify(updatedBenefits));
       })
       .catch(error => {
-        console.error('There was an error adding the payroll!', error);
+        console.error('There was an error adding the benefit!', error);
       });
   };
 
@@ -68,10 +68,10 @@ const PayrollManagement = () => {
     <div className="container px-5 mt-5">
       <div className="card mb-4">
         <div className="card-header">
-          <h4>Add Payroll</h4>
+          <h4>Add Benefit</h4>
         </div>
         <div className="card-body">
-          <form onSubmit={handleAddPayroll}>
+          <form onSubmit={handleAddBenefit}>
             <div className="mb-3">
               <label htmlFor="employeeId" className="form-label">Employee ID</label>
               <input
@@ -92,19 +92,19 @@ const PayrollManagement = () => {
                 onChange={handleAmountChange}
               />
             </div>
-            <button type="submit" className="btn btn-primary">Add Payroll</button>
+            <button type="submit" className="btn btn-primary">Add Benefit</button>
           </form>
         </div>
       </div>
       <div className="card mb-4">
         <div className="card-header d-flex justify-content-between align-items-center">
-          <h4>Payrolls</h4>
+          <h4>Benefits</h4>
         </div>
         <div className="card-body">
           <ul className="list-group">
-            {payrolls.map(payroll => (
-              <li className="list-group-item" key={payroll.id}>
-                <span>Employee ID: {payroll.employeeId}, Amount: {payroll.amount}</span>
+            {benefits.map(benefit => (
+              <li className="list-group-item" key={benefit.id}>
+                <span>Employee ID: {benefit.employeeId}, Amount: {benefit.amount}</span>
               </li>
             ))}
           </ul>
@@ -114,4 +114,4 @@ const PayrollManagement = () => {
   );
 };
 
-export default PayrollManagement;
+export default BenefitsManagement;

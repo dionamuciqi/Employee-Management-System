@@ -6,7 +6,7 @@ const EmployeeNews = () => {
   const [notifications, setNotifications] = useState([]);
 
   useEffect(() => {
-    axios.get('http://localhost:3000/employee/announcements') 
+    axios.get('http://localhost:3000/auth/announcements') 
       .then(response => {
         console.log('Fetched notifications response:', response.data);
         if (response.data.success) { 

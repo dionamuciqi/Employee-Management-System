@@ -32,6 +32,8 @@ import EmployeeHelpSupport from './Components/employee/EmployeeHelpSupport'
 import AdminSupportRequests from './Components/admin/AdminSupportRequests'
 import Payroll from './Components/employee/Payroll'
 import MyLeaves from './Components/employee/MyLeaves'
+import BenefitsManagement from './Components/admin/BenefitsManagement'
+import Benefits from './Components/employee/Benefits'
 
 
 function App() {
@@ -45,13 +47,14 @@ function App() {
             <PrivateRoute>
           <EmployeeDashboard />  
           </PrivateRoute>}>
-          <Route path='/employeedashboard/employeeprofile/:id' element={<EmployeeProfile />} />
+          <Route path='/employeedashboard/employeeprofile' element={<EmployeeProfile />} />
           <Route path='/employeedashboard/employeetraining' element={<EmployeeTraining/>} />
           <Route path='/employeedashboard/employeenews' element={<EmployeeNews />} />
           <Route path='/employeedashboard/certifications' element={<Certifications />} />
           <Route path='/employeedashboard/myleaves' element={<MyLeaves />} />
           <Route path='/employeedashboard/employeehelpsupport' element={<EmployeeHelpSupport />} />
           <Route path='/employeedashboard/payroll' element={<Payroll />} />
+          <Route path='/employeedashboard/benefits' element={<Benefits />} />
           </Route>
           <Route path='/dashboard' element={
           <PrivateRoute>           
@@ -67,6 +70,7 @@ function App() {
           <Route path='/dashboard/certificationsmanagement' element={<CertificationsManagement />}></Route>
           <Route path='/dashboard/category' element={<Category />}></Route>
           <Route path='/dashboard/department' element={<Department />}></Route>
+          <Route path='/dashboard/benefitsmanagement' element={<BenefitsManagement />}></Route>
           <Route path='/dashboard/profile' element={<Profile />}></Route>
           <Route path='/dashboard/adminsupportrequests' element={<AdminSupportRequests />}></Route>
           <Route path='/dashboard/add_category' element={<AddCategory />}></Route>
