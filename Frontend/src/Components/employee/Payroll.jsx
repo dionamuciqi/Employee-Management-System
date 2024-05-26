@@ -37,11 +37,10 @@ const Payroll = () => {
                 {payroll.map(item => (
                   <li className="list-group-item d-flex justify-content-between align-items-center" key={item.id}>
                     <div>
-                      <h5 className="mb-1">Employee ID: {item.employeeId}</h5>
-                      {/* Check if salaryAmount is an object */}
-                      <p className="mb-1">Salary Amount: {typeof item.salaryAmount === 'object' ? JSON.stringify(item.salaryAmount) : `$${item.salaryAmount}`}</p>
-                      <p className="mb-1">Payment Date: {item.paymentDate}</p>
-                    </div>
+                         <h5 className="mb-1">Employee ID: {item.employeeId}</h5>
+                         <p className="mb-1">Salary Amount: ${item.salaryAmount}</p>
+                         <p className="mb-1">Payment Date: {item.paymentDate}</p>
+                     </div>
                   </li>
                 ))}
               </ul>

@@ -2,6 +2,17 @@ import express from 'express';
 import con from '../utils/db.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
+import Admin from '../models/admin.js'
+import Category from '../models/category.js';
+import Department from '../models/department.js';
+import Employee from '../models/employee.js';
+import Trainer from '../models/trainers.js';
+import Announcement from '../models/announcement.js';
+import Certification from '../models/certifications.js';
+import EmployeeTrainer from '../models/employee_trainers.js';
+import HelpSupport from '../models/help_support.js';
+import Payroll from '../models/payroll.js';
+import TrainingMode from '../models/training_modes.js';
 
 const router = express.Router();
 
@@ -10,52 +21,57 @@ const extractUserIdFromToken = (cookies) => {
     if (!cookies) throw new Error('Authentication token is missing');
     const token = cookies.split('; ').find(cookie => cookie.startsWith('token='));
     if (!token) throw new Error('Authentication token is missing');
-    const decodedToken = jwt.verify(token.split('=')[1], "jwt_secret_key");
+    const decodedToken = jwt.verify(token.split('=')[1], "BGYd4dq6HLUeOBhB0WR0lg3V2eeagnG0");
     return decodedToken.id;
 };
 
-// Employee login
-router.post("/employee_login", (req, res) => {
+router.post("/employee_login", async (req, res) => {
     const { email, password } = req.body;
-    const sql = "SELECT * from employee WHERE email = ?";
-    con.query(sql, [email], (err, result) => {
-        if (err) return res.json({ loginStatus: false, Error: "Query error" });
-        if (result.length > 0) {
-            bcrypt.compare(password, result[0].password, (err, response) => {
-                if (err || !response) return res.json({ loginStatus: false, Error: "Wrong email or password" });
-                const token = jwt.sign({ role: "employee", email, id: result[0].id }, "jwt_secret_key", { expiresIn: "1d" });
-                res.cookie('token', token);
-                return res.json({ loginStatus: true, id: result[0].id });
-            });
-        } else {
+    
+    try {
+        const employee = await Employee.findOne({ where: { email } });
+        if (!employee) {
             return res.json({ loginStatus: false, Error: "Wrong email or password" });
         }
-    });
+        bcrypt.compare(password, employee.password, (err, response) => {
+            if (err || !response) {
+                return res.json({ loginStatus: false, Error: "Wrong email or password" });
+            }
+            const token = jwt.sign({ role: "employee", email, id: employee.id }, "BGYd4dq6HLUeOBhB0WR0lg3V2eeagnG0", { expiresIn: "1d" });
+            res.cookie('token', token);
+            return res.json({ loginStatus: true, id: employee.id });
+        });
+    } catch (error) {
+        return res.json({ loginStatus: false, Error: "Query error" });
+    }
 });
 
-// Get employee details
-router.get('/detail/:id', (req, res) => {
+router.get('/detail/:id', async (req, res) => {
     const id = req.params.id;
-    const sql = "SELECT * FROM employee WHERE id = ?";
-    con.query(sql, [id], (err, result) => {
-        if (err) return res.json({ Status: false });
-        return res.json(result);
-    });
+
+    try {
+        const employee = await Employee.findByPk(id);
+        if (!employee) {
+            return res.json({ Status: false });
+        }
+        return res.json(employee);
+    } catch (error) {
+        console.error('Error fetching employee:', error);
+        return res.json({ Status: false });
+    }
 });
 
-// Get trainers for a specific employee
-router.get('/employee_trainers', (req, res) => {
+router.get('/employee_trainers', async (req, res) => {
     try {
         const userId = extractUserIdFromToken(req.headers.cookie);
-        const sql = `
-            SELECT trainers.* FROM trainers
-            JOIN employee_trainers ON trainers.id = employee_trainers.trainer_id
-            WHERE employee_trainers.employee_id = ?
-        `;
-        con.query(sql, [userId], (err, result) => {
-            if (err) return res.json({ Status: false, Error: "Query Error" });
-            return res.json({ Status: true, Result: result });
+        const trainers = await EmployeeTrainer.findAll({
+            where: { employee_id: userId },
+            include: [Trainer] 
         });
+        if (!trainers || trainers.length === 0) {
+            return res.json({ Status: false, Error: "No trainers found for the employee" });
+        }
+        return res.json({ Status: true, Result: trainers });
     } catch (error) {
         return res.status(401).json({ success: false, error: error.message });
     }
@@ -99,75 +115,73 @@ router.get('/employee_trainers/:employee_id', (req, res) => {
 });
 
 // Get notifications
-router.get('/notifications', (req, res) => {
+router.get('/announcements', async (req, res) => {
     try {
         const userId = extractUserIdFromToken(req.headers.cookie);
-        const sql = `
-            SELECT id, message, created_at 
-            FROM announcements 
-            WHERE employee_id = ? 
-            ORDER BY created_at DESC
-        `;
-        con.query(sql, [userId], (err, results) => {
-            if (err) return res.status(500).json({ success: false, error: 'Error fetching notifications' });
-            return res.json({ success: true, notifications: results });
+
+        const notifications = await Announcement.findAll({
+            attributes: ['id', 'message', 'created_at'],
+            where: { employee_id: userId },
+            order: [['created_at', 'DESC']]
         });
+
+        res.json({ success: true, notifications });
     } catch (error) {
-        return res.status(401).json({ success: false, error: error.message });
+        res.status(401).json({ success: false, error: error.message });
     }
-});
+}); 
 
 // Get certifications
-router.get('/certifications', (req, res) => {
+router.get('/certifications', async (req, res) => {
     try {
         const userId = extractUserIdFromToken(req.headers.cookie);
-        const sql = `
-            SELECT id, certificationName, employeeId 
-            FROM certifications 
-            WHERE employeeId = ? 
-            ORDER BY id DESC
-        `;
-        con.query(sql, [userId], (err, results) => {
-            if (err) return res.status(500).json({ success: false, error: 'Error fetching certifications' });
-            return res.json({ success: true, certifications: results });
+        const certifications = await Certification.findAll({
+            attributes: ['id', 'certificationName', 'employeeId'],
+            where: { employeeId: userId },
+            order: [['id', 'DESC']]
         });
+        return res.json({ success: true, certifications });
     } catch (error) {
         return res.status(401).json({ success: false, error: error.message });
     }
 });
 
-// Get payroll information
-router.get('/payroll', (req, res) => {
+router.get('/payroll', async (req, res) => {
     try {
         const userId = extractUserIdFromToken(req.headers.cookie);
         const paymentDate = req.query.paymentDate;
-        const sql = `
-            SELECT id, employeeId, salaryAmount, paymentDate 
-            FROM payroll 
-            WHERE employeeId = ? AND paymentDate = ? 
-            ORDER BY id DESC
-        `;
-        con.query(sql, [userId, paymentDate], (err, results) => {
-            if (err) return res.status(500).json({ success: false, error: 'Error fetching payroll information' });
-            return res.json({ success: true, payroll: results });
+        const payroll = await Payroll.findAll({
+            where: { 
+                employeeId: userId,
+                paymentDate: paymentDate
+            },
+            order: [['id', 'DESC']]
         });
+        return res.json({ success: true, payroll });
     } catch (error) {
         return res.status(401).json({ success: false, error: error.message });
     }
 });
 
-// Submit help and support request
-router.post('/help-support', (req, res) => {
-    const { email, name, phoneNumber, description, priority, startDate } = req.body;
-    if (!email || !name || !phoneNumber || !description || !priority || !startDate) {
-        return res.status(400).json({ success: false, error: 'All fields are required' });
-    }
-    const sql = `INSERT INTO help_support (email, name, phoneNumber, description, priority, startDate) VALUES (?, ?, ?, ?, ?, ?)`;
-    const values = [email, name, phoneNumber, description, priority, startDate];
-    con.query(sql, values, (err, results) => {
-        if (err) return res.status(500).json({ success: false, error: 'Database error' });
+router.post('/help-support', async (req, res) => {
+    try {
+        const { email, name, phoneNumber, description, priority, startDate } = req.body;
+
+        if (!email || !name || !phoneNumber || !description || !priority || !startDate) {
+            return res.status(400).json({ success: false, error: 'All fields are required' });
+        }
+        const helpSupportRequest = await HelpSupport.create({
+            email,
+            name,
+            phoneNumber,
+            description,
+            priority,
+            startDate
+        });
         return res.json({ success: true, message: 'Help request submitted successfully' });
-    });
+    } catch (error) {
+        return res.status(500).json({ success: false, error: 'Database error' });
+    }
 });
 
 // Logout

@@ -38,23 +38,6 @@ const PayrollManagement = () => {
     });
   };
 
-  const handleUpdateSalary = () => {
-    if (!employeeId || !salaryAmount) {
-      console.error('Please enter both Employee ID and Salary Amount to update.');
-      return;
-    }
-
-    axios.patch(`http://localhost:3000/auth/payroll/${employeeId}`, { salaryAmount: salaryAmount })
-      .then(response => {
-        console.log('Salary updated successfully!', response.data);
-        // Optionally, you can reset the salary input field after successful update
-        setSalaryAmount('');
-      })
-      .catch(error => {
-        console.error('There was an error updating the salary!', error);
-      });
-  };
-
   return (
     <div className="container px-5 mt-5">
       <div className="card mb-4">
@@ -82,7 +65,6 @@ const PayrollManagement = () => {
               value={salaryAmount}
               onChange={handleSalaryAmountChange}
             />
-            <button type="button" className="btn btn-primary" onClick={handleUpdateSalary}>Update</button>
           </div>
         </div>
       </div>

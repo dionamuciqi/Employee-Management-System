@@ -95,15 +95,14 @@ return (
                     </tr>
                 </thead>
                 <tbody>
-                    {
-                        admins.map(a => (
-                            <tr key={a.id}>
-                                <td>{a.email}</td>
-                            </tr>
-                        ))
-
-                    }
-                </tbody>
+              {
+                admins && admins.map(a => (
+                <tr key={a.id}>
+                <td>{a.email}</td>
+            </tr>
+              ))
+             }
+            </tbody>
             </table>
         </div>
     </div>
