@@ -13,6 +13,8 @@ import EmployeeTrainer from '../models/employee_trainers.js';
 import HelpSupport from '../models/help_support.js';
 import Payroll from '../models/payroll.js';
 import TrainingMode from '../models/training_modes.js';
+import HealthService from '../models/healthservice.js';
+
 
 const router = express.Router();
 
@@ -141,6 +143,19 @@ router.get('/certifications', async (req, res) => {
             order: [['id', 'DESC']]
         });
         return res.json({ success: true, certifications });
+    } catch (error) {
+        return res.status(401).json({ success: false, error: error.message });
+    }
+});
+//------------------Health Service----------------------
+router.get('/healthservices', async (req, res) => {
+    try {
+        const userId = extractUserIdFromToken(req.headers.cookie);
+        const healthServices = await HealthService.findAll({
+            where: { employeeId: userId },
+            order: [['id', 'DESC']]
+        });
+        return res.json({ success: true, healthServices });
     } catch (error) {
         return res.status(401).json({ success: false, error: error.message });
     }

@@ -32,7 +32,8 @@ import EmployeeHelpSupport from './Components/employee/EmployeeHelpSupport'
 import AdminSupportRequests from './Components/admin/AdminSupportRequests'
 import Payroll from './Components/employee/Payroll'
 import MyLeaves from './Components/employee/MyLeaves'
-
+import HealthServices from './Components/employee/HealthServices'
+import HealthServicesManagement from './Components/admin/HealthServicesManagement'
 
 function App() {
   return (
@@ -49,6 +50,7 @@ function App() {
           <Route path='/employeedashboard/employeetraining' element={<EmployeeTraining/>} />
           <Route path='/employeedashboard/employeenews' element={<EmployeeNews />} />
           <Route path='/employeedashboard/certifications' element={<Certifications />} />
+          <Route path='/employeedashboard/healthservices' element={<HealthServices />} />
           <Route path='/employeedashboard/myleaves' element={<MyLeaves />} />
           <Route path='/employeedashboard/employeehelpsupport' element={<EmployeeHelpSupport />} />
           <Route path='/employeedashboard/payroll' element={<Payroll />} />
@@ -63,6 +65,7 @@ function App() {
           <Route path='/dashboard/attendancemanagement' element={<AttendanceManagement />}></Route>
           <Route path='/dashboard/notificationsandannouncements' element={<NotificationsandAnnouncements />}></Route>
           <Route path='/dashboard/payrollmanagement' element={<PayrollManagement />}></Route>
+          <Route path='/dashboard/healthservicesmanagement' element={<HealthServicesManagement />}></Route>
           <Route path='/dashboard/leavemanagement' element={<LeaveManagement />}></Route>
           <Route path='/dashboard/certificationsmanagement' element={<CertificationsManagement />}></Route>
           <Route path='/dashboard/category' element={<Category />}></Route>

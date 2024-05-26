@@ -15,6 +15,8 @@ import EmployeeTrainer from '../models/employee_trainers.js';
 import HelpSupport from '../models/help_support.js';
 import Payroll from '../models/payroll.js';
 import TrainingMode from '../models/training_modes.js';
+import HealthService from '../models/healthservice.js';
+
 
 const router = express.Router()
 
@@ -423,6 +425,30 @@ router.delete('/clearnotifications', async (req, res) => {
     }
 });
 
+//-------------Health Service-----------------
+router.post('/healthservices', async (req, res) => {
+    try {
+        const { serviceName, serviceDate, description, employeeId } = req.body;
+
+        if (!serviceName || !serviceDate || !employeeId) {
+            return res.status(400).json({ success: false, error: 'Invalid request data' });
+        }
+
+        const healthService = await HealthService.create({ serviceName, serviceDate, description, employeeId });
+        return res.json({ success: true, healthService });
+    } catch (error) {
+        return res.status(500).json({ success: false, error: 'Error inserting health service' });
+    }
+});
+
+router.get('/healthservices', async (req, res) => {
+    try {
+        const healthServices = await HealthService.findAll();
+        return res.json({ success: true, healthServices });
+    } catch (error) {
+        return res.status(500).json({ success: false, error: 'Error fetching health services' });
+    }
+});
 
 router.post('/payroll', async (req, res) => {
     try {
