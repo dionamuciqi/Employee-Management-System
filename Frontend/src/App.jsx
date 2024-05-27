@@ -23,7 +23,7 @@ import Start from './Components/admin/Start'
 import EmployeeLogin from './Components/employee/EmployeeLogin'
 import EmployeeDashboard from './Components/employee/EmployeeDashboard'
 import PrivateRoute from './Components/admin/PrivateRoute'
-import AttendanceManagement from './Components/admin/AttendanceManagement'
+import TasksManagement from './Components/admin/TasksManagement'
 import LeaveManagement from './Components/admin/LeaveManagement'
 import NotificationsandAnnouncements from './Components/admin/NotificationsandAnnouncements'
 import PayrollManagement from './Components/admin/PayrollManagement'
@@ -39,6 +39,7 @@ import HealthServices from './Components/employee/HealthServices'
 import HealthServicesManagement from './Components/admin/HealthServicesManagement'
 import BenefitsManagement from './Components/admin/BenefitsManagement'
 import Benefits from './Components/employee/Benefits'
+import Tasks from './Components/employee/Tasks'
 import AnnualPlans from './Components/admin/AnnualPlans'
 
 function App() {
@@ -62,6 +63,7 @@ function App() {
           <Route path='/employeedashboard/employeehelpsupport' element={<EmployeeHelpSupport />} />
           <Route path='/employeedashboard/payroll' element={<Payroll />} />
           <Route path='/employeedashboard/benefits' element={<Benefits />} />
+          <Route path='/employeedashboard/tasks' element={<Tasks />} />
           </Route>
           <Route path='/dashboard' element={
           <PrivateRoute>           
@@ -70,6 +72,7 @@ function App() {
           <Route path='' element={<Home />}></Route>
           <Route path='/dashboard/employee' element={<Employee />}></Route>
           <Route path='/dashboard/trainers' element={<Trainers />}></Route>
+          <Route path='/dashboard/tasksmanagement' element={<TasksManagement />}></Route>
           <Route path='/dashboard/meets' element={<Meets />}></Route>
           <Route path='/dashboard/attendancemanagement' element={<AttendanceManagement />}></Route>
           <Route path='/dashboard/notificationsandannouncements' element={<NotificationsandAnnouncements />}></Route>
