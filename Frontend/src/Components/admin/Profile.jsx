@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import 'bootstrap/dist/css/bootstrap.min.css';
-import profileImage from '/public/Images/adminphoto.png';
+import profileImage from '/Images/photo.png';
 
 const AdminProfile = () => {
     const [admin, setAdmin] = useState("");
