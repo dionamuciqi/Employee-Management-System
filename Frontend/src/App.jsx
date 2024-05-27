@@ -20,7 +20,7 @@ import Start from './Components/admin/Start'
 import EmployeeLogin from './Components/employee/EmployeeLogin'
 import EmployeeDashboard from './Components/employee/EmployeeDashboard'
 import PrivateRoute from './Components/admin/PrivateRoute'
-import TaskManagement from './Components/admin/TaskManagement'
+import TasksManagement from './Components/admin/TasksManagement'
 import LeaveManagement from './Components/admin/LeaveManagement'
 import NotificationsandAnnouncements from './Components/admin/NotificationsandAnnouncements'
 import PayrollManagement from './Components/admin/PayrollManagement'
@@ -58,7 +58,7 @@ function App() {
           <Route path='/employeedashboard/employeehelpsupport' element={<EmployeeHelpSupport />} />
           <Route path='/employeedashboard/payroll' element={<Payroll />} />
           <Route path='/employeedashboard/benefits' element={<Benefits />} />
-          <Route path='/employeedashboard/task' element={<Tasks />} />
+          <Route path='/employeedashboard/tasks' element={<Tasks />} />
           </Route>
           <Route path='/dashboard' element={
           <PrivateRoute>           
@@ -67,7 +67,7 @@ function App() {
           <Route path='' element={<Home />}></Route>
           <Route path='/dashboard/employee' element={<Employee />}></Route>
           <Route path='/dashboard/trainers' element={<Trainers />}></Route>
-          <Route path='/dashboard/taskmanagement' element={<TaskManagement />}></Route>
+          <Route path='/dashboard/tasksmanagement' element={<TasksManagement />}></Route>
           <Route path='/dashboard/notificationsandannouncements' element={<NotificationsandAnnouncements />}></Route>
           <Route path='/dashboard/payrollmanagement' element={<PayrollManagement />}></Route>
           <Route path='/dashboard/healthservicesmanagement' element={<HealthServicesManagement />}></Route>

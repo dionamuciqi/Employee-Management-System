@@ -542,27 +542,27 @@ router.post('/benefits', (req, res) => {
     });
 });
   
+
 //-------------------
-router.post('/tasks', async (req, res) => {
-    try {
-        const { taskName, employeeId } = req.body;
-        console.log('Received request data:', req.body);
+router.post('/tasks', (req, res) => {
+    const { employeeId, description } = req.body;
+    console.log('Received request data:', req.body);
 
-        if (!taskName || !employeeId) {
-            console.error('Invalid request data:', req.body);
-            return res.status(400).json({ success: false, error: 'Invalid request data' });
-        }
-
-        const task = await Task.create({ taskName, employeeId });
-
-        console.log('Task inserted successfully with ID:', task.id);
-        return res.json({ success: true, task });
-    } catch (error) {
-        console.error('Error inserting task:', error);
-        return res.status(500).json({ success: false, error: 'Error inserting task' });
+    if (!employeeId || !description) {
+        console.error('Invalid request data:', req.body);
+        return res.status(400).json({ success: false, error: 'Employee ID and Task Description are required' });
     }
+
+    const sql = 'INSERT INTO tasks (employeeId, description) VALUES (?, ?)';
+    con.query(sql, [employeeId, description], (err, result) => {
+        if (err) {
+            console.error('Error inserting task:', err);
+            return res.status(500).json({ success: false, error: 'Error inserting task' });
+        }
+        console.log('Task inserted successfully with ID:', result.insertId);
+        return res.json({ success: true, task: { id: result.insertId, employeeId, description } });
+    });
 });
-//-------------------
 
   
 router.get('/logout', (req, res) => {

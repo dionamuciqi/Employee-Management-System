@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const TasksManagement = () => {
+const Tasks = () => {
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
@@ -9,7 +9,7 @@ const TasksManagement = () => {
   }, []);
 
   const fetchTasks = () => {
-    axios.get('http://localhost:3000/tasks', { withCredentials: true })
+    axios.get('http://localhost:3000/employee/tasks', { withCredentials: true })
       .then(response => {
         console.log('Fetched tasks response:', response.data);
         if (response.data.success) {
@@ -37,7 +37,8 @@ const TasksManagement = () => {
                 {tasks.map(task => (
                   <li className="list-group-item d-flex justify-content-between align-items-center" key={task.id}>
                     <div>
-                      <h5 className="mb-1">{task.taskName}</h5>
+                      <h5 className="mb-1">Task: {task.description}</h5>
+                      <p className="mb-0">Employee ID: {task.employeeId}</p>
                     </div>
                   </li>
                 ))}
@@ -55,4 +56,4 @@ const TasksManagement = () => {
   );
 };
 
-export default TasksManagement;
+export default Tasks;

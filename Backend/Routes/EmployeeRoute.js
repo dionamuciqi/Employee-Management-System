@@ -235,19 +235,18 @@ router.get('/benefits', (req, res) => {
 });
 
 // Get tasks
-router.get('/tasks', async (req, res) => {
-    try {
-        const userId = extractUserIdFromToken(req.headers.cookie);
-        const tasks = await Task.findAll({
-            attributes: ['id', 'taskName'],
-            where: { employeeId: userId },
-            order: [['id', 'DESC']]
-        });
-        return res.json({ success: true, tasks });
-    } catch (error) {
-        return res.status(401).json({ success: false, error: error.message });
-    }
+router.get('/tasks', (req, res) => {
+    const sql = 'SELECT id, employeeId, description FROM tasks';
+    con.query(sql, (err, results) => {
+        if (err) {
+            console.error('Error fetching tasks:', err);
+            return res.status(500).json({ success: false, error: 'Error fetching tasks' });
+        }
+        console.log('Tasks fetched successfully:', results);
+        return res.json({ success: true, tasks: results });
+    });
 });
+
 
 // Logout
 router.get('/logout', (req, res) => {
