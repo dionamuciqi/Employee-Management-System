@@ -80,7 +80,8 @@ Reading and Writing Data: Using Sequelize allows us to read and write data from 
 
  
 
-![Database Schema](https://drive.google.com/file/d/10rdH5x2tkKSk6SVXJamNvrqzQzyjaqIX/view?usp=drive_link)
+![Database Schema]([direct-image-url](https://drive.google.com/file/d/10rdH5x2tkKSk6SVXJamNvrqzQzyjaqIX/view?usp=sharing ))
+
 
 
 ### 4. Database Migrations
