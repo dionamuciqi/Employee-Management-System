@@ -41,6 +41,10 @@ import BenefitsManagement from './Components/admin/BenefitsManagement'
 import Benefits from './Components/employee/Benefits'
 import Tasks from './Components/employee/Tasks'
 import AnnualPlans from './Components/admin/AnnualPlans'
+import EmployeeResetPassword from './Components/employee/EmployeeResetPassword'
+import EmployeeForgotPassword from './Components/employee/EmployeeForgotPassword'
+import ForgotPassword from './Components/admin/ForgotPassword'
+import ResetPassword from './Components/admin/ResetPassword'
 
 function App() {
   return (
@@ -48,7 +52,11 @@ function App() {
       <Routes>
           <Route path='/' element={<Start />}></Route>
           <Route path='/adminlogin' element={<Login />}></Route>
+          <Route path='/forgotpassword' element={<ForgotPassword />}></Route>
+          <Route path='/reset_password' element={<ResetPassword />}></Route>
           <Route path='/employee_login' element={<EmployeeLogin />}></Route>
+          <Route path='/employeeforgotpassword' element={<EmployeeForgotPassword />}></Route>
+          <Route path='/employeeresetpassword' element={<EmployeeResetPassword />}></Route>
           <Route path='/employeedashboard' element={
             <PrivateRoute>
           <EmployeeDashboard />  

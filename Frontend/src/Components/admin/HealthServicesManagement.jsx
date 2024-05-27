@@ -119,7 +119,7 @@ const HealthServicesManagement = () => {
           <ul className="list-group">
             {healthServices.map(service => (
               <li className="list-group-item" key={service.id}>
-                <span>{service.serviceName} (Employee ID: {service.employeeId}, Date: {service.serviceDate})</span>
+                <span>{service.serviceName} (Employee ID: {service.employeeId}, Date: {new Date(service.serviceDate).toLocaleDateString()})</span>
                 <p>{service.description}</p>
               </li>
             ))}
