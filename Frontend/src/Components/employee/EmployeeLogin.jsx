@@ -19,7 +19,7 @@ const EmployeeLogin = () => {
           .then(result => {
             if (result.data.loginStatus) {
               localStorage.setItem("valid", true)
-              navigate('/employeedashboard')
+              navigate('/employeedashboard/employeeprofile')
             } else {
               setError(result.data.Error)
             }

@@ -54,8 +54,9 @@ router.post('/employee_login', async (req, res) => {
 
 router.get('/detail', async (req, res) => {
     
-    try {
-        const id = req.params.id; //TODO get Id from token
+    try { 
+        const userId = extractUserIdFromToken(req.headers.cookie);
+        const id = userId; //TODO get Id from token
         const employee = await Employee.findByPk(id);
         if (!employee) {
             return res.json({ Status: false });
