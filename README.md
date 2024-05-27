@@ -22,10 +22,19 @@ The Employee Management System provides basic functionalities for managing emplo
 3. Install backend dependencies:
     cd ../backend
      npm install
+# Contributors
 
-   ## Project Status
+The Employee Management System project was developed by the following contributors:
 
-This project is currently ongoing. We are continuously adding new features and improvements. 
+- Agnesa Jashanica
+- Ajshe Selmani
+- Albina Kuleta
+- Diona Muçiqi
+- Iliri Jasharaj
+
+# Acknowledgments
+
+We extend our heartfelt gratitude to our professors and mentors who provided invaluable guidance and support throughout the development of this project. Additionally, we would like to thank the vibrant communities of JavaScript and MySQL for their contributions and resources that made this project possible.
 
 
 
