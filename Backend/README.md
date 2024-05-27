@@ -1,6 +1,6 @@
 # Backend
 
-Welcome to the backend folder of our application. This directory houses all the server-side logic, including routes, models, configuration files, utilities, and package management.
+Welcome to the backend folder of our Employee Management System. This directory houses all the server-side logic, including routes, models, configuration files, utilities, and package management.
 
 ## Package Files
 
@@ -60,26 +60,28 @@ sequelize.js is a wrapper module that abstracts the usage of Sequelize ORM. It e
 
 
 ## Documentation of the Implementation Process of Sequelize ORM and Database Migrations
-1. Project Description
+ ### 1. Project Description
 Our project is a system for employee management, developed in a Node.js environment with a MySQL database. We chose Sequelize as the ORM (Object-Relational Mapping) to facilitate our access to the database and to manage database migrations.
 
-2.  Choice of Sequelize as ORM and MySQL as Database
+### 2.  Choice of Sequelize as ORM and MySQL as Database
 The choice of Sequelize as ORM and MySQL as the database was made for several reasons:
 
 Node.js Compatibility: Sequelize is a powerful and suitable ORM for projects developed in Node.js.
 Support for MySQL: Sequelize offers built-in support for MySQL, which is a widely used and reliable database.
 Community and Documentation: Sequelize has a large community and rich documentation, allowing us to quickly find solutions to challenges we may encounter during the implementation and management of the ORM in our project.
-3. Sequelize ORM Implementation Process
+
+### 3. Sequelize ORM Implementation Process
 The process of implementing Sequelize ORM in our project involves the following key steps:
 
 Installation of Sequelize and MySQL Driver: Initially, Sequelize and the MySQL driver are installed in our project via npm.
 Sequelize Configuration: We configure Sequelize to connect our application to the MySQL database. This includes configuring the connection parameters in the config/config.json file.
 Definition of Models: Next, models are defined for the data in the database. Models define the structure and relationships between different tables in the database.
 Reading and Writing Data: Using Sequelize allows us to read and write data from and to the database through the defined models.
-4. Database Migrations
+
+### 4. Database Migrations
 To manage changes in the database structure, we use database migrations. These migrations are used to create, alter, or delete tables, columns, or indexes in the database. Using migrations ensures a structured and safe process for applying changes to the database without risking existing data.
 
-5. Decisions Made during the Development Process
+### 5. Decisions Made during the Development Process
 During the development of the project, we made several important technical decisions, such as:
 
 Choice of Sequelize and MySQL: The choice of Sequelize as ORM and MySQL as the database was made due to their compatibility with our project and our previous experience with them.
