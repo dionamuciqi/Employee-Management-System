@@ -7,14 +7,15 @@ import axios from "axios";
 const Dashboard = () => {
   const navigate = useNavigate();
   axios.defaults.withCredentials = true;
+
   const handleLogout = () => {
     axios.get('http://localhost:3000/auth/logout')
-    .then(result => {
-      if(result.data.Status) { 
-        localStorage.removeItem("valid")
-        navigate('/')
-      }
-    });
+      .then(result => {
+        if(result.data.Status) { 
+          localStorage.removeItem("valid");
+          navigate('/');
+        }
+      });
   };
 
   return (
@@ -47,9 +48,7 @@ const Dashboard = () => {
                   className="nav-link px-0 align-middle text-white"
                 >
                   <i className="fs-4 bi-people ms-2"></i>
-                  <span className="ms-2 d-none d-sm-inline">
-                    Manage Employees
-                  </span>
+                  <span className="ms-2 d-none d-sm-inline">Manage Employees</span>
                 </Link>
               </li>
               <li className="w-100">
@@ -58,20 +57,19 @@ const Dashboard = () => {
                   className="nav-link px-0 align-middle text-white"
                 >
                   <i className="fs-4 bi-diagram-2 ms-2"></i>
-                  <span className="ms-2 d-none d-sm-inline">
-                    Manage Trainers
-                  </span>
+                  <span className="ms-2 d-none d-sm-inline">Manage Trainers</span>
                 </Link>
               </li>
               <li className="w-100">
-              <Link
-              to="/dashboard/department"
-              className="nav-link px-0 align-middle text-white" >
-               <i className="fs-4 bi-briefcase ms-2"></i>
-                <span className="ms-2 d-none d-sm-inline">Department</span>
+                <Link
+                  to="/dashboard/department"
+                  className="nav-link px-0 align-middle text-white"
+                >
+                  <i className="fs-4 bi-briefcase ms-2"></i>
+                  <span className="ms-2 d-none d-sm-inline">Department</span>
                 </Link>
-                </li>
-                <li className="w-100">
+              </li>
+              <li className="w-100">
                 <Link
                   to="/dashboard/category"
                   className="nav-link px-0 align-middle text-white"
@@ -86,9 +84,7 @@ const Dashboard = () => {
                   className="nav-link px-0 align-middle text-white"
                 >
                   <i className="fs-4 bi-clock ms-2"></i>
-                  <span className="ms-2 d-none d-sm-inline">
-                    Attendance Management
-                  </span>
+                  <span className="ms-2 d-none d-sm-inline">Attendance Management</span>
                 </Link>
               </li>
               <li className="w-100">
@@ -115,9 +111,7 @@ const Dashboard = () => {
                   className="nav-link px-0 align-middle text-white"
                 >
                   <i className="fs-4 bi-currency-dollar ms-2"></i>
-                  <span className="ms-2 d-none d-sm-inline">
-                    Payroll Management
-                  </span>
+                  <span className="ms-2 d-none d-sm-inline">Payroll Management</span>
                 </Link>
               </li>
               <li className="w-100">
@@ -129,16 +123,13 @@ const Dashboard = () => {
                   <span className="ms-2 d-none d-sm-inline">Health Service Management</span>
                 </Link>
               </li>
-
               <li className="w-100">
                 <Link
                   to="/dashboard/notificationsandannouncements"
                   className="nav-link px-0 align-middle text-white"
                 >
                   <i className="fs-4 bi-bell ms-2"></i>
-                  <span className="ms-2 d-none d-sm-inline">
-                    Notifications & Announcements
-                  </span>
+                  <span className="ms-2 d-none d-sm-inline">Notifications & Announcements</span>
                 </Link>
               </li>
               <li className="w-100">
@@ -157,6 +148,15 @@ const Dashboard = () => {
                 >
                   <i className="fs-4 bi-person ms-2"></i>
                   <span className="ms-2 d-none d-sm-inline">Benefits</span>
+                </Link>
+              </li>
+              <li className="w-100">
+                <Link
+                  to="/dashboard/annualplans"
+                  className="nav-link px-0 align-middle text-white"
+                >
+                  <i className="fs-4 bi-person ms-2"></i>
+                  <span className="ms-2 d-none d-sm-inline">Annual Plans</span>
                 </Link>
               </li>
               <li className="w-100">

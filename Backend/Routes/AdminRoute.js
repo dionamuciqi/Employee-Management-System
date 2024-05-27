@@ -226,7 +226,7 @@ router.post('/add_trainers', async (req, res) => {
             email: req.body.email,
             address: req.body.address,
             department_id: req.body.department_id,
-            training_mode_id: req.body.training_mode_id
+            training: req.body.training_mode_id
         });
 
         const createdEmployeeTrainer = await EmployeeTrainer.create({
@@ -542,6 +542,50 @@ router.post('/benefits', (req, res) => {
     });
 });
   
+
+router.post('/annualplans', (req, res) => {
+    const { plan, end_date } = req.body;
+    console.log('Received request data:', req.body);
+
+    if (!plan || !end_date) {
+        console.error('Invalid request data:', req.body);
+        return res.status(400).json({ success: false, error: 'Plan and end date are required' });
+    }
+
+    const sql = 'INSERT INTO annual_plans (plan, end_date) VALUES (?, ?)';
+    con.query(sql, [plan, end_date], (err, result) => {
+        if (err) {
+            console.error('Error inserting plan:', err);
+            return res.status(500).json({ success: false, error: 'Error inserting plan' });
+        }
+        console.log('Plan inserted successfully with ID:', result.insertId);
+        return res.json({ success: true, plan: { id: result.insertId, plan, end_date } });
+    });
+});
+
+router.get('/annualplans', (req, res) => {
+    const sql = 'SELECT id, plan, end_date, created_at FROM annual_plans';
+    con.query(sql, (err, results) => {
+        if (err) {
+            console.error('Error fetching plans:', err);
+            return res.status(500).json({ success: false, error: 'Error fetching plans' });
+        }
+        console.log('Plans fetched successfully:', results);
+        return res.json({ success: true, plans: results });
+    });
+});
+
+router.delete('/clearplans', (req, res) => {
+    const sql = 'DELETE FROM annual_plans';
+    con.query(sql, (err, result) => {
+        if (err) {
+            console.error('Error clearing plans:', err);
+            return res.status(500).json({ success: false, error: 'Error clearing plans' });
+        }
+        console.log('Plans cleared successfully!');
+        return res.json({ success: true });
+    });
+});
   
 router.get('/logout', (req, res) => {
     res.clearCookie('token')

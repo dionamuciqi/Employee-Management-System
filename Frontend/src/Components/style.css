@@ -13,9 +13,6 @@
 .textlogin {
     text-align: center;
 }
-ul li :hover {
-    background-color: gray;
-}
 
 .employee_image {
     width: 40px;
@@ -56,5 +53,13 @@ ul li :hover {
     color: #007bff; 
   }
 
+  .nav-link.active {
+    background-color: #0056b3; /* Blue background for active link */
+  }
+  
+  .nav-link:hover {
+    background-color: #007bff; /* Blue background on hover */
+    color: white;
+  }
   
   
