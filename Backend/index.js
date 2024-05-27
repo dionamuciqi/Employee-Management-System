@@ -16,6 +16,7 @@ import Trainer from './models/trainers.js';
 import EmployeeTrainer from './models/employee_trainers.js';
 import Payroll from './models/payroll.js'; 
 import HelpSupport from './models/help_support.js'; 
+import Tasks from './models/tasks.js'; 
 
 const app = express();
 app.use(cors({

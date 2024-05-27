@@ -36,7 +36,7 @@ import HealthServices from './Components/employee/HealthServices'
 import HealthServicesManagement from './Components/admin/HealthServicesManagement'
 import BenefitsManagement from './Components/admin/BenefitsManagement'
 import Benefits from './Components/employee/Benefits'
-import Task from './Components/employee/Task'
+import Tasks from './Components/employee/Tasks'
 
 function App() {
   return (
@@ -58,7 +58,7 @@ function App() {
           <Route path='/employeedashboard/employeehelpsupport' element={<EmployeeHelpSupport />} />
           <Route path='/employeedashboard/payroll' element={<Payroll />} />
           <Route path='/employeedashboard/benefits' element={<Benefits />} />
-          <Route path='/employeedashboard/task' element={<Task />} />
+          <Route path='/employeedashboard/task' element={<Tasks />} />
           </Route>
           <Route path='/dashboard' element={
           <PrivateRoute>           

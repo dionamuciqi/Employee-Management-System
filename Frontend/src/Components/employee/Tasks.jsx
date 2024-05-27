@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 
-const TaskManagement = () => {
+const TasksManagement = () => {
   const [tasks, setTasks] = useState([]);
 
   useEffect(() => {
@@ -55,4 +55,4 @@ const TaskManagement = () => {
   );
 };
 
-export default TaskManagement;
+export default TasksManagement;
