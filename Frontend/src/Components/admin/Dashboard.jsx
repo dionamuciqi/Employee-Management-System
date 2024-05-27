@@ -82,12 +82,12 @@ const Dashboard = () => {
               </li>
               <li className="w-100">
                 <Link
-                  to="/dashboard/attendancemanagement"
+                  to="/dashboard/taskmanagement"
                   className="nav-link px-0 align-middle text-white"
                 >
                   <i className="fs-4 bi-clock ms-2"></i>
                   <span className="ms-2 d-none d-sm-inline">
-                    Attendance Management
+                    Task Management
                   </span>
                 </Link>
               </li>

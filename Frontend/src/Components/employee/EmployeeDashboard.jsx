@@ -66,12 +66,12 @@ const EmployeeDashboard = () => {
               </li>
               <li className="w-100">
                 <Link
-                  to="/employeedashboard/employetimeattendance"
+                  to="/employeedashboard/task"
                   className="nav-link px-0 align-middle text-white"
                 >
                   <i className="fs-4 bi-clock-history ms-2"></i>
                   <span className="ms-2 d-none d-sm-inline">
-                    Time & Attendance
+                    Task
                   </span>
                 </Link>
               </li>

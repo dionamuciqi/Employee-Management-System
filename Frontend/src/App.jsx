@@ -20,7 +20,7 @@ import Start from './Components/admin/Start'
 import EmployeeLogin from './Components/employee/EmployeeLogin'
 import EmployeeDashboard from './Components/employee/EmployeeDashboard'
 import PrivateRoute from './Components/admin/PrivateRoute'
-import AttendanceManagement from './Components/admin/AttendanceManagement'
+import TaskManagement from './Components/admin/TaskManagement'
 import LeaveManagement from './Components/admin/LeaveManagement'
 import NotificationsandAnnouncements from './Components/admin/NotificationsandAnnouncements'
 import PayrollManagement from './Components/admin/PayrollManagement'
@@ -36,6 +36,7 @@ import HealthServices from './Components/employee/HealthServices'
 import HealthServicesManagement from './Components/admin/HealthServicesManagement'
 import BenefitsManagement from './Components/admin/BenefitsManagement'
 import Benefits from './Components/employee/Benefits'
+import Task from './Components/employee/Task'
 
 function App() {
   return (
@@ -57,6 +58,7 @@ function App() {
           <Route path='/employeedashboard/employeehelpsupport' element={<EmployeeHelpSupport />} />
           <Route path='/employeedashboard/payroll' element={<Payroll />} />
           <Route path='/employeedashboard/benefits' element={<Benefits />} />
+          <Route path='/employeedashboard/task' element={<Task />} />
           </Route>
           <Route path='/dashboard' element={
           <PrivateRoute>           
@@ -65,7 +67,7 @@ function App() {
           <Route path='' element={<Home />}></Route>
           <Route path='/dashboard/employee' element={<Employee />}></Route>
           <Route path='/dashboard/trainers' element={<Trainers />}></Route>
-          <Route path='/dashboard/attendancemanagement' element={<AttendanceManagement />}></Route>
+          <Route path='/dashboard/attendancemanagement' element={<TaskManagement />}></Route>
           <Route path='/dashboard/notificationsandannouncements' element={<NotificationsandAnnouncements />}></Route>
           <Route path='/dashboard/payrollmanagement' element={<PayrollManagement />}></Route>
           <Route path='/dashboard/healthservicesmanagement' element={<HealthServicesManagement />}></Route>

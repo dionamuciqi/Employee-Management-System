@@ -542,6 +542,28 @@ router.post('/benefits', (req, res) => {
     });
 });
   
+//-------------------
+router.post('/tasks', async (req, res) => {
+    try {
+        const { taskName, employeeId } = req.body;
+        console.log('Received request data:', req.body);
+
+        if (!taskName || !employeeId) {
+            console.error('Invalid request data:', req.body);
+            return res.status(400).json({ success: false, error: 'Invalid request data' });
+        }
+
+        const task = await Task.create({ taskName, employeeId });
+
+        console.log('Task inserted successfully with ID:', task.id);
+        return res.json({ success: true, task });
+    } catch (error) {
+        console.error('Error inserting task:', error);
+        return res.status(500).json({ success: false, error: 'Error inserting task' });
+    }
+});
+//-------------------
+
   
 router.get('/logout', (req, res) => {
     res.clearCookie('token')

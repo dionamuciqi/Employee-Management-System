@@ -233,6 +233,22 @@ router.get('/benefits', (req, res) => {
         return res.json({ success: true, benefits: results });
     });
 });
+
+// Get tasks
+router.get('/tasks', async (req, res) => {
+    try {
+        const userId = extractUserIdFromToken(req.headers.cookie);
+        const tasks = await Task.findAll({
+            attributes: ['id', 'taskName'],
+            where: { employeeId: userId },
+            order: [['id', 'DESC']]
+        });
+        return res.json({ success: true, tasks });
+    } catch (error) {
+        return res.status(401).json({ success: false, error: error.message });
+    }
+});
+
 // Logout
 router.get('/logout', (req, res) => {
     res.clearCookie('token');
