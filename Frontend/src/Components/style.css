@@ -1,6 +1,6 @@
 .loginPage {
-    background: url('Images/employeems.jpg');
-    background: linear-gradient(rgba(11, 11, 11, 0.5), rgba(10, 10, 10, 0.5)), url("Images/employeems.jpg");
+    background: url('/public/Images/employeems.jpg');
+    background: linear-gradient(rgba(11, 11, 11, 0.5), rgba(10, 10, 10, 0.5)), url("/public/Images/employeems.jpg");
     background-position: center;
     background-repeat: no-repeat;
     background-size: 100% 120%;
@@ -54,12 +54,240 @@
   }
 
   .nav-link.active {
-    background-color: #0056b3; /* Blue background for active link */
+    background-color: #0056b3; 
   }
   
   .nav-link:hover {
-    background-color: #007bff; /* Blue background on hover */
+    background-color: #007bff; 
     color: white;
   }
+
+  .forgot-password-link {
+    display: block;
+    margin-top: 10px; 
+    text-decoration: underline;
+    text-align: center;
+    color: #007bff; 
+  }
+  .forgot-password-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background-color: #f0f2f5;
+}
+
+.forgot-password-form {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 400px;
+    text-align: center;
+    
+}
+
+.forgot-password-form h2 {
+    margin-bottom: 1rem;
+    color: #333;
+}
+
+.forgot-password-form form {
+    display: flex;
+    flex-direction: column;
+}
+
+.forgot-password-form label {
+    text-align: left;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #555;
+}
+
+.forgot-password-form input {
+    padding: 0.5rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 100%;
+}
+
+.forgot-password-form button {
+    padding: 0.75rem;
+    background-color: #007bff;
+    border: none;
+    color: white;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.forgot-password-form button:hover {
+    background-color: #0056b3;
+}
+
+.forgot-password-form p {
+    margin-top: 1rem;
+    color: #28a745;
+}
+
+.forgot-password-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('public/Images/employeems.jpg');
+    background: linear-gradient(rgba(11, 11, 11, 0.5), rgba(10, 10, 10, 0.5)), url("public/Images/employeems.jpg");
+}
+
+.forgot-password-form {
+    background: rgb(227, 225, 225);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.forgot-password-form:hover {
+    transform: translateY(-10px);
+}
+
+.forgot-password-form h2 {
+    margin-bottom: 1rem;
+    color: #333;
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.forgot-password-form form {
+    display: flex;
+    flex-direction: column;
+}
+
+.forgot-password-form label {
+    text-align: left;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #555;
+}
+
+.forgot-password-form input {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 100%;
+    font-size: 1rem;
+}
+
+.forgot-password-form input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 8px rgba(102, 126, 234, 0.5);
+    outline: none;
+}
+
+.forgot-password-form button {
+    padding: 0.75rem;
+    background-color: #667eea;
+    border: none;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.forgot-password-form button:hover {
+    background-color: #5555ee;
+}
+
+.forgot-password-form p {
+    margin-top: 1rem;
+    color: #28a745;
+    font-size: 1rem;
+}
+
+.reset-password-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: url('public/Images/employeems.jpg');
+    background: linear-gradient(rgba(11, 11, 11, 0.5), rgba(10, 10, 10, 0.5)), url("public/Images/employeems.jpg");
+}
+
+.reset-password-form {
+    background: rgb(227, 225, 225);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.reset-password-form:hover {
+    transform: translateY(-10px);
+}
+
+.reset-password-form h2 {
+    margin-bottom: 1rem;
+    color: #333;
+    font-size: 1.8rem;
+    font-weight: bold;
+}
+
+.reset-password-form form {
+    display: flex;
+    flex-direction: column;
+}
+
+.reset-password-form label {
+    text-align: left;
+    margin-bottom: 0.5rem;
+    font-weight: bold;
+    color: #555;
+}
+
+.reset-password-form input {
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    width: 100%;
+    font-size: 1rem;
+}
+
+.reset-password-form input:focus {
+    border-color: #667eea;
+    box-shadow: 0 0 8px rgba(102, 126, 234, 0.5);
+    outline: none;
+}
+
+.reset-password-form button {
+    padding: 0.75rem;
+    background-color: #667eea;
+    border: none;
+    color: white;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background-color 0.3s ease;
+}
+
+.reset-password-form button:hover {
+    background-color: #5555ee;
+}
+
+.reset-password-form p {
+    margin-top: 1rem;
+    color: #28a745;
+    font-size: 1rem;
+}
   
   

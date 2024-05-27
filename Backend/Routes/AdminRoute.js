@@ -17,25 +17,31 @@ import Payroll from '../models/payroll.js';
 import TrainingMode from '../models/training_modes.js';
 import HealthService from '../models/healthservice.js';
 import Leaves from '../models/leaves.js';
+import nodemailer from 'nodemailer';
 
 const router = express.Router()
 
 router.post('/adminlogin', async (req, res) => {
     const { email, password } = req.body;
     try {
-        const admin = await Admin.findOne({ where: { email, password } });
-        if (admin) {
-            const token = jwt.sign(
-                { role: "admin", email: admin.email, id: admin.id }, 
-                "BGYd4dq6HLUeOBhB0WR0lg3V2eeagnG0", 
-                { expiresIn: "1d" }
-            );
-            res.cookie('token', token);
-            res.cookie('email', email); 
-            return res.json({ loginStatus: true });
-        } else {
+        const admin = await Admin.findOne({ where: { email } });
+        if (!admin) {
             return res.json({ loginStatus: false, Error: "Wrong email or password" });
         }
+
+        const isValidPassword = bcrypt.compareSync(password, admin.password);
+        if (!isValidPassword) {
+            return res.json({ loginStatus: false, Error: "Wrong email or password" });
+        }
+
+        const token = jwt.sign(
+            { role: "admin", email: admin.email, id: admin.id }, 
+            "BGYd4dq6HLUeOBhB0WR0lg3V2eeagnG0", 
+            { expiresIn: "1d" }
+        );
+        res.cookie('token', token);
+        res.cookie('email', email); 
+        return res.json({ loginStatus: true });
     } catch (error) {
         console.error("Error:", error);
         return res.status(500).json({ loginStatus: false, Error: "Internal Server Error" });
@@ -585,6 +591,66 @@ router.delete('/clearplans', (req, res) => {
         console.log('Plans cleared successfully!');
         return res.json({ success: true });
     });
+});
+
+router.post('/forgot_password', (req, res) => {
+    const { email } = req.body;
+    const sql = "SELECT id FROM admin WHERE email = ?"; // Ensure this matches your database structure
+
+    con.query(sql, [email], (err, result) => {
+        if (err) {
+            console.error("Database query error:", err);
+            return res.status(500).json({ success: false, message: "Database query error" });
+        }
+        if (result.length === 0) {
+            console.log("Email not found:", email);
+            return res.status(400).json({ success: false, message: "Email not found" });
+        }
+
+        const resetToken = jwt.sign({ id: result[0].id }, "BGYd4dq6HLUeOBhB0WR0lg3V2eeagnG0", { expiresIn: "1h" });
+        const resetLink = `http://localhost:5173/reset_password?token=${resetToken}`;
+
+        const transporter = nodemailer.createTransport({
+            service: 'Gmail',
+            auth: {
+                user: 'ilirjasharajj@gmail.com',
+                pass: 'wipx nspz ashn vtwy'
+            }
+        });
+
+        const mailOptions = {
+            from: 'ilirjasharajj@gmail.com',
+            to: email,
+            subject: 'Password Reset',
+            text: `Click the link to reset your password: ${resetLink}`
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error("Error sending email:", error);
+                return res.status(500).json({ success: false, message: "Error sending email" });
+            }
+            return res.json({ success: true, message: "Password reset link sent to your email" });
+        });
+    });
+});
+router.post('/reset_password', (req, res) => {
+    const { token, newPassword } = req.body;
+
+    try {
+        const decoded = jwt.verify(token, "BGYd4dq6HLUeOBhB0WR0lg3V2eeagnG0");
+        const hashedPassword = bcrypt.hashSync(newPassword, 10);
+
+        const sql = "UPDATE admin SET password = ? WHERE id = ?";
+        con.query(sql, [hashedPassword, decoded.id], (err, result) => {
+            if (err) {
+                return res.status(500).json({ success: false, message: "Error resetting password" });
+            }
+            return res.json({ success: true, message: "Password reset successfully" });
+        });
+    } catch (error) {
+        return res.status(400).json({ success: false, message: "Invalid or expired token" });
+    }
 });
   
 router.get('/logout', (req, res) => {
