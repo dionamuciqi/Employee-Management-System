@@ -107,12 +107,12 @@ const EmployeeDashboard = () => {
               </li>
               <li className="w-100">
                 <Link
-                  to="/employeedashboard/employeeperformancereviews"
-                  className={`nav-link px-0 align-middle text-white ${isActive('/employeedashboard/employeeperformancereviews')}`}
+                  to="/employeedashboard/employeemeeting"
+                  className={`nav-link px-0 align-middle text-white ${isActive('/employeedashboard/employeemeeting')}`}
                 >
                   <i className="fs-4 bi-journal-text ms-2"></i>
                   <span className="ms-2 d-none d-sm-inline">
-                    Performance Reviews
+                  Meetings ahead
                   </span>
                 </Link>
               </li>
