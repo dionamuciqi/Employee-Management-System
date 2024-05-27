@@ -13,7 +13,9 @@ import Certification from './models/certifications.js';
 import Department from './models/department.js';
 import TrainingMode from './models/training_modes.js';
 import Trainer from './models/trainers.js';
+import Meet from './models/meets.js';
 import EmployeeTrainer from './models/employee_trainers.js';
+import EmployeeMeet from './models/employee_meets.js';
 import Payroll from './models/payroll.js'; 
 import HelpSupport from './models/help_support.js'; 
 import Tasks from './models/tasks.js'; 
@@ -48,6 +50,30 @@ const verifyUser = (req, res, next) => {
 
 app.get('/verify', verifyUser, (req, res) => {
     return res.json({Status: true, role: req.role, id: req.id});
+});
+
+// Add meeting route
+app.post('/auth/add_meets', async (req, res) => {
+    const { topic, details, meeting_date, meeting_mode, employee_id } = req.body;
+
+    try {
+        const createdMeet = await Meet.create({
+            topic: req.body.topic,
+            details: req.body.details,
+            meeting_date: req.body.meeting_date,
+            meeting_mode: req.body.meeting_mode,
+            employee_id: req.body.employee_id
+        });
+
+        const createdEmployeeMeet = await EmployeeMeet.create({
+            employee_id: req.body.employee_id,
+            meet_id: createdMeet.mid
+        });
+
+        return res.json({ Status: true });
+    } catch (error) {
+        return res.json({ Status: false, Error: error.message });
+    }
 });
 
 sequelize.sync() 

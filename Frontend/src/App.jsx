@@ -12,8 +12,11 @@ import AddCategory from './Components/admin/AddCategory'
 import AddDepartment from './Components/admin/AddDepartment'
 import AddEmployee from './Components/admin/AddEmployee'
 import AddTrainers from './Components/admin/AddTrainers'
+import AddMeets from './Components/admin/AddMeets'
 import Trainers from './Components/admin/Trainers'
+import Meets from './Components/admin/Meets'
 import EmployeeTraining from './Components/employee/EmployeeTraining'
+import EmployeeMeeting from './Components/employee/EmployeeMeeting'
 import EditEmployee from './Components/admin/EditEmployee'
 import EditTrainers from './Components/admin/EditTrainers'
 import Start from './Components/admin/Start'
@@ -37,6 +40,7 @@ import HealthServicesManagement from './Components/admin/HealthServicesManagemen
 import BenefitsManagement from './Components/admin/BenefitsManagement'
 import Benefits from './Components/employee/Benefits'
 import Tasks from './Components/employee/Tasks'
+import AnnualPlans from './Components/admin/AnnualPlans'
 
 function App() {
   return (
@@ -51,6 +55,7 @@ function App() {
           </PrivateRoute>}>
           <Route path='/employeedashboard/employeeprofile' element={<EmployeeProfile />} />
           <Route path='/employeedashboard/employeetraining' element={<EmployeeTraining/>} />
+          <Route path='/employeedashboard/employeemeeting' element={<EmployeeMeeting/>} />
           <Route path='/employeedashboard/employeenews' element={<EmployeeNews />} />
           <Route path='/employeedashboard/certifications' element={<Certifications />} />
           <Route path='/employeedashboard/healthservices' element={<HealthServices />} />
@@ -68,11 +73,14 @@ function App() {
           <Route path='/dashboard/employee' element={<Employee />}></Route>
           <Route path='/dashboard/trainers' element={<Trainers />}></Route>
           <Route path='/dashboard/tasksmanagement' element={<TasksManagement />}></Route>
+          <Route path='/dashboard/meets' element={<Meets />}></Route>
+          <Route path='/dashboard/attendancemanagement' element={<AttendanceManagement />}></Route>
           <Route path='/dashboard/notificationsandannouncements' element={<NotificationsandAnnouncements />}></Route>
           <Route path='/dashboard/payrollmanagement' element={<PayrollManagement />}></Route>
           <Route path='/dashboard/healthservicesmanagement' element={<HealthServicesManagement />}></Route>
           <Route path='/dashboard/leavemanagement' element={<LeaveManagement />}></Route>
           <Route path='/dashboard/certificationsmanagement' element={<CertificationsManagement />}></Route>
+          <Route path='/dashboard/annualplans' element={<AnnualPlans />} />
           <Route path='/dashboard/category' element={<Category />}></Route>
           <Route path='/dashboard/department' element={<Department />}></Route>
           <Route path='/dashboard/benefitsmanagement' element={<BenefitsManagement />}></Route>
@@ -82,6 +90,7 @@ function App() {
           <Route path='/dashboard/add_department' element={<AddDepartment />}></Route>
           <Route path='/dashboard/add_employee' element={<AddEmployee />}></Route>
           <Route path='/dashboard/add_trainers' element={<AddTrainers />}></Route>
+          <Route path='/dashboard/add_meets' element={<AddMeets />}></Route>
           <Route path='/dashboard/edit_employee/:id' element={<EditEmployee />}></Route>
           <Route path='/dashboard/edit_trainers/:id' element={<EditTrainers />}></Route>
 

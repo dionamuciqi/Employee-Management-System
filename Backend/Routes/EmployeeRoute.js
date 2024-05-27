@@ -7,9 +7,11 @@ import Category from '../models/category.js';
 import Department from '../models/department.js';
 import Employee from '../models/employee.js';
 import Trainer from '../models/trainers.js';
+import Meet from '../models/meets.js';
 import Announcement from '../models/announcement.js';
 import Certification from '../models/certifications.js';
 import EmployeeTrainer from '../models/employee_trainers.js';
+import EmployeeMeet from '../models/employee_meets.js';
 import HelpSupport from '../models/help_support.js';
 import Payroll from '../models/payroll.js';
 import TrainingMode from '../models/training_modes.js';
@@ -48,10 +50,10 @@ router.post("/employee_login", async (req, res) => {
     }
 });
 
-router.get('/detail/:id', async (req, res) => {
-    const id = req.params.id;
-
+router.get('/detail', async (req, res) => {
+    
     try {
+        const id = req.params.id; //TODO get Id from token
         const employee = await Employee.findByPk(id);
         if (!employee) {
             return res.json({ Status: false });
@@ -79,6 +81,23 @@ router.get('/employee_trainers', async (req, res) => {
     }
 });
 
+router.get('/employee_meets', async (req, res) => {
+    try {
+        const userId = extractUserIdFromToken(req.headers.cookie);
+        const meets = await EmployeeMeet.findAll({
+            where: { employee_id: userId },
+            include: [Meet] 
+        });
+        if (!meets || meets.length === 0) {
+            return res.json({ Status: false, Error: "No meets found for the employee" });
+        }
+        return res.json({ Status: true, Result: meets });
+    } catch (error) {
+        return res.status(401).json({ success: false, error: error.message });
+    }
+});
+
+
 // Get trainings
 router.get('/trainings', (req, res) => {
     try {
@@ -102,6 +121,29 @@ router.get('/trainings', (req, res) => {
     }
 });
 
+// Get meetings
+router.get('/meetings', (req, res) => {
+     
+    try {
+        const userId = extractUserIdFromToken(req.headers.cookie);
+        const sql = `
+            SELECT 
+            m.mid, m.topic, m.details, m.meeting_date, 
+            tm.mode as meeting
+            FROM meets m
+            INNER JOIN employee_meets em ON em.meet_id = m.mid
+            LEFT JOIN training_modes tm ON tm.mode = m.meeting_mode
+            WHERE em.employee_id = ?
+        `;
+        con.query(sql, [userId], (err, result) => {
+            if (err) return res.json({ Status: false, Error: "Query Error" });
+            return res.json({ Status: true, Result: result });
+        });
+    } catch (error) {
+        return res.status(401).json({ success: false, error: error.message });
+    }
+});
+
 // Get employee trainers by employee ID
 router.get('/employee_trainers/:employee_id', (req, res) => {
     const employee_id = req.params.employee_id;
@@ -109,6 +151,37 @@ router.get('/employee_trainers/:employee_id', (req, res) => {
         SELECT trainers.* FROM trainers
         JOIN employee_trainers ON trainers.id = employee_trainers.trainer_id
         WHERE employee_trainers.employee_id = ?
+    `;
+    con.query(sql, [employee_id], (err, result) => {
+        if (err) return res.json({ Status: false, Error: "Query Error" });
+        return res.json({ Status: true, Result: result });
+    });
+});
+
+router.get('/employee/meetings', async (req, res) => {
+    try {
+        const cookies = req.headers.cookie;
+        const decodedToken = jwt.verify(cookies.replace("token=",""),"BGYd4dq6HLUeOBhB0WR0lg3V2eeagnG0" )
+        const userId = decodesToken.id
+        console.log(userId);
+        const meets = await EmployeeMeet.findAll({
+            where: { employee_id: userId },
+            include: [Meeting] 
+        });
+        
+        return res.json({ Status: true, Result: meets });
+    } catch (error) {
+        return res.status(401).json({ success: false, error: error.message });
+    }
+});
+
+// Get employee meets by employee ID
+router.get('/employee_meets/:employee_id', (req, res) => {
+    const employee_id = req.params.employee_id;
+    const sql = `
+        SELECT meets.* FROM meets
+        JOIN employee_meets ON meets.mid = employee_meets.meet_id
+        WHERE employee_meets.employee_id = ?
     `;
     con.query(sql, [employee_id], (err, result) => {
         if (err) return res.json({ Status: false, Error: "Query Error" });
