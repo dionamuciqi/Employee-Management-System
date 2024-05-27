@@ -67,7 +67,7 @@ function App() {
           <Route path='' element={<Home />}></Route>
           <Route path='/dashboard/employee' element={<Employee />}></Route>
           <Route path='/dashboard/trainers' element={<Trainers />}></Route>
-          <Route path='/dashboard/attendancemanagement' element={<TaskManagement />}></Route>
+          <Route path='/dashboard/taskmanagement' element={<TaskManagement />}></Route>
           <Route path='/dashboard/notificationsandannouncements' element={<NotificationsandAnnouncements />}></Route>
           <Route path='/dashboard/payrollmanagement' element={<PayrollManagement />}></Route>
           <Route path='/dashboard/healthservicesmanagement' element={<HealthServicesManagement />}></Route>
