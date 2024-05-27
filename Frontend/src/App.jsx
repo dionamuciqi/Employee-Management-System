@@ -36,6 +36,7 @@ import HealthServices from './Components/employee/HealthServices'
 import HealthServicesManagement from './Components/admin/HealthServicesManagement'
 import BenefitsManagement from './Components/admin/BenefitsManagement'
 import Benefits from './Components/employee/Benefits'
+import AnnualPlans from './Components/admin/AnnualPlans'
 
 function App() {
   return (
@@ -71,6 +72,7 @@ function App() {
           <Route path='/dashboard/healthservicesmanagement' element={<HealthServicesManagement />}></Route>
           <Route path='/dashboard/leavemanagement' element={<LeaveManagement />}></Route>
           <Route path='/dashboard/certificationsmanagement' element={<CertificationsManagement />}></Route>
+          <Route path='/dashboard/annualplans' element={<AnnualPlans />} />
           <Route path='/dashboard/category' element={<Category />}></Route>
           <Route path='/dashboard/department' element={<Department />}></Route>
           <Route path='/dashboard/benefitsmanagement' element={<BenefitsManagement />}></Route>
