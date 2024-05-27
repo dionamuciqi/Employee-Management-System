@@ -74,7 +74,6 @@ function App() {
           <Route path='/dashboard/trainers' element={<Trainers />}></Route>
           <Route path='/dashboard/tasksmanagement' element={<TasksManagement />}></Route>
           <Route path='/dashboard/meets' element={<Meets />}></Route>
-          <Route path='/dashboard/attendancemanagement' element={<AttendanceManagement />}></Route>
           <Route path='/dashboard/notificationsandannouncements' element={<NotificationsandAnnouncements />}></Route>
           <Route path='/dashboard/payrollmanagement' element={<PayrollManagement />}></Route>
           <Route path='/dashboard/healthservicesmanagement' element={<HealthServicesManagement />}></Route>

@@ -87,7 +87,6 @@ const Dashboard = () => {
                   <span className="ms-2 d-none d-sm-inline">
                     Task Management
                   </span>
-                  <span className="ms-2 d-none d-sm-inline">Attendance Management</span>
                 </Link>
               </li>
               <li className="w-100">

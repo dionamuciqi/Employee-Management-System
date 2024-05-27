@@ -2,19 +2,13 @@ import express from 'express';
 import con from '../utils/db.js';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
-import Admin from '../models/admin.js'
-import Category from '../models/category.js';
-import Department from '../models/department.js';
 import Employee from '../models/employee.js';
 import Trainer from '../models/trainers.js';
 import Meet from '../models/meets.js';
-import Announcement from '../models/announcement.js';
 import Certification from '../models/certifications.js';
 import EmployeeTrainer from '../models/employee_trainers.js';
 import EmployeeMeet from '../models/employee_meets.js';
 import HelpSupport from '../models/help_support.js';
-import Payroll from '../models/payroll.js';
-import TrainingMode from '../models/training_modes.js';
 import HealthService from '../models/healthservice.js';
 
 

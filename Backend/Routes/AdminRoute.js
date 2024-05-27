@@ -10,13 +10,9 @@ import Department from '../models/department.js';
 import Employee from '../models/employee.js';
 import Trainer from '../models/trainers.js';
 import Meet from '../models/meets.js';
-import Announcement from '../models/announcement.js';
-import Certification from '../models/certifications.js';
 import EmployeeTrainer from '../models/employee_trainers.js';
 import EmployeeMeet from '../models/employee_meets.js';
 import HelpSupport from '../models/help_support.js';
-import Payroll from '../models/payroll.js';
-import TrainingMode from '../models/training_modes.js';
 import HealthService from '../models/healthservice.js';
 import Leaves from '../models/leaves.js';
 
@@ -98,7 +94,6 @@ const upload = multer({
     storage: storage
 })
 // end imag eupload 
-
 
 router.post('/add_employee', upload.single('image'), async (req, res) => {
     try {
