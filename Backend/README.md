@@ -78,6 +78,11 @@ Sequelize Configuration: We configure Sequelize to connect our application to th
 Definition of Models: Next, models are defined for the data in the database. Models define the structure and relationships between different tables in the database.
 Reading and Writing Data: Using Sequelize allows us to read and write data from and to the database through the defined models.
 
+ 
+
+![Database Schema](https://drive.google.com/uc?export=view&id=10rdH5x2tkKSk6SVXJamNvrqzQzyjaqIX)
+
+
 ### 4. Database Migrations
 To manage changes in the database structure, we use database migrations. These migrations are used to create, alter, or delete tables, columns, or indexes in the database. Using migrations ensures a structured and safe process for applying changes to the database without risking existing data.
 
