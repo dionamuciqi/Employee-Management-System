@@ -79,8 +79,9 @@ Definition of Models: Next, models are defined for the data in the database. Mod
 Reading and Writing Data: Using Sequelize allows us to read and write data from and to the database through the defined models.
 
  
+ 
+ ![DB](https://github.com/dionamuciqi/Employee-Management-System/assets/75807796/56f78dc7-d095-4da6-8979-3bc63a0b50cd)
 
-![Database Schema]([direct-image-url](https://drive.google.com/file/d/10rdH5x2tkKSk6SVXJamNvrqzQzyjaqIX/view?usp=sharing ))
 
 
 
