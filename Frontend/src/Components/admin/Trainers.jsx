@@ -19,10 +19,10 @@ const Trainers = () => {
   }, []);
 
   const handleDelete = (id) => {
-    axios.delete(`http://localhost:3000/auth/delete_trainers/${id}`)
+    axios.delete(`http://localhost:3000/auth/delete_trainers/`+id)
       .then(result => {
         if (result.data.Status) {
-          navigate('/dashboard/trainers');
+          setTrainers(prevTrainers => prevTrainers.filter(trainer => trainer.id !== id));
         } else {
           alert(result.data.Error);
         }

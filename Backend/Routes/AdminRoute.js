@@ -9,9 +9,11 @@ import Category from '../models/category.js';
 import Department from '../models/department.js';
 import Employee from '../models/employee.js';
 import Trainer from '../models/trainers.js';
+import Meet from '../models/meets.js';
 import Announcement from '../models/announcement.js';
 import Certification from '../models/certifications.js';
 import EmployeeTrainer from '../models/employee_trainers.js';
+import EmployeeMeet from '../models/employee_meets.js';
 import HelpSupport from '../models/help_support.js';
 import Payroll from '../models/payroll.js';
 import TrainingMode from '../models/training_modes.js';
@@ -121,6 +123,9 @@ router.post('/add_employee', upload.single('image'), async (req, res) => {
 router.get('/employee', async (req, res) => {
     try {
         const employees = await Employee.findAll();
+        if (employees.length === 0) {
+            return res.json({ Status: false, Error: "No employees found" });
+        }
         return res.json({Status: true, Result: employees});
     } catch (error) {
         return res.json({Status: false, Error: error.message});
@@ -240,11 +245,43 @@ router.post('/add_trainers', async (req, res) => {
     }
 });
 
+router.post('/auth/add_meets', async (req, res) => {
+    const { topic, details, meeting_date, meeting_mode, employee_id } = req.body;
+
+    try {
+        const createdMeet = await Meet.create({
+            topic: req.body.topic,
+            details: req.body.details,
+            meeting_date: req.body.meeting_date,
+            meeting_mode: req.body.meeting_mode,
+            employee_id: req.body.employee_id
+        });
+
+        const createdEmployeeMeet = await EmployeeMeet.create({
+            employee_id: req.body.employee_id,
+            meet_id: createdMeet.id
+        });
+
+        return res.json({ Status: true });
+    } catch (error) {
+        return res.json({ Status: false, Error: error.message });
+    }
+});
+
 
 router.get('/trainers', async (req, res) => {
     try {
         const trainers = await Trainer.findAll();
         return res.json({ Status: true, Result: trainers });
+    } catch (error) {
+        return res.json({ Status: false, Error: error.message });
+    }
+});
+
+router.get('/meets', async (req, res) => {
+    try {
+        const meets = await Meet.findAll();
+        return res.json({ Status: true, Result: meets });
     } catch (error) {
         return res.json({ Status: false, Error: error.message });
     }
@@ -258,6 +295,19 @@ router.get('/trainers/:id', async (req, res) => {
             return res.json({ Status: false, Error: "Trainer not found" });
         }
         return res.json({ Status: true, Result: trainer });
+    } catch (error) {
+        return res.json({ Status: false, Error: error.message });
+    }
+});
+
+router.get('/meets/:mid', async (req, res) => {
+    try {
+        const mid = req.params.mid;
+        const meet = await Meet.findByPk(mid);
+        if (!meet) {
+            return res.json({ Status: false, Error: "Meet not found" });
+        }
+        return res.json({ Status: true, Result: meet });
     } catch (error) {
         return res.json({ Status: false, Error: error.message });
     }
@@ -285,9 +335,12 @@ router.put('/edit_trainers/:id', async (req, res) => {
 
 router.delete('/delete_trainers/:id', async (req, res) => {
     try {
+        console.log(req.params.id);
         const id = req.params.id;
+        await EmployeeTrainer.destroy({ where:{ trainer_id: id}});
         const trainer = await Trainer.findByPk(id);
-        
+        //Duhet me u fshi se pari krejt rreshtat qe jane tek tabelat tjera qe e permbajne Id ekesaj tabele p.sh
+        //Para se me fshi ne tabelen Trainers ju duheni me fshi ne tabelen Employee_Trainers
         if (!trainer) {
             return res.json({ Status: false, Error: "Trainer not found" });
         }
@@ -298,6 +351,22 @@ router.delete('/delete_trainers/:id', async (req, res) => {
     }
 });
 
+router.delete('/delete_meets/:mid', async (req, res) => {
+    try {
+        console.log(req.params.mid);
+        const mid = req.params.mid;
+        await EmployeeMeet.destroy({ where:{ meet_id: mid}});
+        const meet = await Meet.findByPk(mid);
+ 
+        if (!meet) {
+            return res.json({ Status: false, Error: "Meeting not found" });
+        }
+        await meet.destroy();
+        return res.json({ Status: true, Result: "Meeting deleted successfully" });
+    } catch (error) {
+        return res.json({ Status: false, Error: error.message });
+    }
+});
 
 router.get('/department', async (req, res) => {
     try {
@@ -308,21 +377,6 @@ router.get('/department', async (req, res) => {
     }
 });
 
-// router.get('/employee/trainings', (req, res) => {
-//     const cookies = req.headers.cookie;
-//     console.log(cookies)
-//     const decodedToken = jwt.verify(cookies.replace("token=",""),"BGYd4dq6HLUeOBhB0WR0lg3V2eeagnG0" )
-//     const userId = decodedToken.id
-//     console.log('userId',userId)
-//     // Nuk vjen kjo info ne front eshte ne jwt te userit qe eshte i kyqur const employeeId = req.user.id; // Assuming you have user info in the request object
-//     const sql = `SELECT t.* FROM trainers t
-//                  inner join employee_trainers et on et.trainer_id = t.id
-//                  where et.employee_id = ?`;
-//     con.query(sql, [userId], (err, result) => {
-//         if (err) return res.json({ Status: false, Error: "Query Error" });
-//         return res.json({ Status: true, Result: result });
-//     });
-// }); 
 
 router.get('/employee_trainers/:employee_id', async (req, res) => {
     try {
@@ -335,6 +389,22 @@ router.get('/employee_trainers/:employee_id', async (req, res) => {
         });
 
         return res.json({ Status: true, Result: trainers });
+    } catch (error) {
+        return res.json({ Status: false, Error: error.message });
+    }
+});
+
+router.get('/employee_meets/:employee_id', async (req, res) => {
+    try {
+        const employeeId = req.params.employee_id;
+        const meets = await Meet.findAll({
+            include: {
+                model: Employee,
+                where: { id: employeeId }
+            }
+        });
+
+        return res.json({ Status: true, Result: meets });
     } catch (error) {
         return res.json({ Status: false, Error: error.message });
     }
