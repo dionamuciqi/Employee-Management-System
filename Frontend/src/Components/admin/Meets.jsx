@@ -1,15 +1,14 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link} from "react-router-dom";
 
 const Meets = () => {
   const [meets, setMeets] = useState([]);
-  const navigate = useNavigate();
+
   
   useEffect(() => {
     axios.get('http://localhost:3000/auth/meets')
       .then(result => {
-        debugger;
         if (result.data.Status) {
           setMeets(result.data.Result);
         } else {
@@ -20,7 +19,6 @@ const Meets = () => {
   }, []);
 
   const handleDelete = (mid) => {
-    debugger;
     axios.delete(`http://localhost:3000/auth/delete_meets/`+mid)
       .then(result => {
         if (result.data.Status) {
@@ -58,7 +56,7 @@ const Meets = () => {
                   <tr key={meet.mid}>
                     <td>{meet.topic}</td>
                     <td>{meet.details}</td>
-                    <td>{meet.meeting_date}</td>
+                    <td>{new Date(meet.meeting_date).toLocaleDateString()}</td>
                     <td>{meet.meeting_mode}</td>
                     <td>
                       <button className="btn btn-warning btn-sm" onClick={() => handleDelete(meet.mid)}>Delete</button>

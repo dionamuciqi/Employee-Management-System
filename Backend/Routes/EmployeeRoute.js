@@ -10,6 +10,7 @@ import EmployeeTrainer from '../models/employee_trainers.js';
 import EmployeeMeet from '../models/employee_meets.js';
 import HelpSupport from '../models/help_support.js';
 import HealthService from '../models/healthservice.js';
+import nodemailer from 'nodemailer';
 
 
 const router = express.Router();
@@ -23,26 +24,33 @@ const extractUserIdFromToken = (cookies) => {
     return decodedToken.id;
 };
 
-router.post("/employee_login", async (req, res) => {
+router.post('/employee_login', async (req, res) => {
     const { email, password } = req.body;
-    
     try {
         const employee = await Employee.findOne({ where: { email } });
         if (!employee) {
             return res.json({ loginStatus: false, Error: "Wrong email or password" });
         }
-        bcrypt.compare(password, employee.password, (err, response) => {
-            if (err || !response) {
-                return res.json({ loginStatus: false, Error: "Wrong email or password" });
-            }
-            const token = jwt.sign({ role: "employee", email, id: employee.id }, "BGYd4dq6HLUeOBhB0WR0lg3V2eeagnG0", { expiresIn: "1d" });
-            res.cookie('token', token);
-            return res.json({ loginStatus: true, id: employee.id });
-        });
+
+        const isValidPassword = bcrypt.compareSync(password, employee.password);
+        if (!isValidPassword) {
+            return res.json({ loginStatus: false, Error: "Wrong email or password" });
+        }
+
+        const token = jwt.sign(
+            { role: "employee", email: employee.email, id: employee.id }, 
+            "BGYd4dq6HLUeOBhB0WR0lg3V2eeagnG0", 
+            { expiresIn: "1d" }
+        );
+        res.cookie('token', token);
+        res.cookie('email', email); 
+        return res.json({ loginStatus: true, id: employee.id });
     } catch (error) {
-        return res.json({ loginStatus: false, Error: "Query error" });
+        console.error("Error:", error);
+        return res.status(500).json({ loginStatus: false, Error: "Internal Server Error" });
     }
 });
+
 
 router.get('/detail', async (req, res) => {
     
@@ -186,7 +194,7 @@ router.get('/employee_meets/:employee_id', (req, res) => {
 // Get notifications
 router.get('/notifications', (req, res) => {
     const cookies = req.headers.cookie;
-    const decodedToken = jwt.verify(cookies.replace("token=", ""), "jwt_secret_key");
+    const decodedToken = jwt.verify(cookies.replace("token=", ""), "BGYd4dq6HLUeOBhB0WR0lg3V2eeagnG0");
     const userId = decodedToken.id;
     console.log('Decoded User ID:', userId);
 
@@ -314,6 +322,67 @@ router.get('/tasks', (req, res) => {
     });
 });
 
+router.post('/employee_forgot_password', (req, res) => {
+    const { email } = req.body;
+    const sql = "SELECT id FROM employee WHERE email = ?"; // Use the correct table name
+
+    con.query(sql, [email], (err, result) => {
+        if (err) {
+            console.error("Database query error:", err);
+            return res.status(500).json({ success: false, message: "Database query error" });
+        }
+        if (result.length === 0) {
+            console.log("Email not found:", email);
+            return res.status(400).json({ success: false, message: "Email not found" });
+        }
+
+        const resetToken = jwt.sign({ id: result[0].id }, "BGYd4dq6HLUeOBhB0WR0lg3V2eeagnG0", { expiresIn: "1h" });
+        const resetLink = `http://localhost:5173/employee_reset_password?token=${resetToken}`;
+
+        const transporter = nodemailer.createTransport({
+            service: 'Gmail',
+            auth: {
+                user: 'ilirjasharajj@gmail.com',
+                pass: 'wipx nspz ashn vtwy'
+            }
+        });
+
+        const mailOptions = {
+            from: 'ilirjasharajj@gmail.com',
+            to: email,
+            subject: 'Password Reset',
+            text: `Click the link to reset your password: ${resetLink}`
+        };
+
+        transporter.sendMail(mailOptions, (error, info) => {
+            if (error) {
+                console.error("Error sending email:", error);
+                return res.status(500).json({ success: false, message: "Error sending email" });
+            }
+            return res.json({ success: true, message: "Password reset link sent to your email" });
+        });
+    });
+});
+
+// Employee Reset Password Route
+router.post('/employee_reset_password', (req, res) => {
+    const { token, newPassword } = req.body;
+
+    try {
+        const decoded = jwt.verify(token, "BGYd4dq6HLUeOBhB0WR0lg3V2eeagnG0");
+        const hashedPassword = bcrypt.hashSync(newPassword, 10);
+
+        const sql = "UPDATE employee SET password = ? WHERE id = ?";
+        con.query(sql, [hashedPassword, decoded.id], (err, result) => {
+            if (err) {
+                return res.status(500).json({ success: false, message: "Error resetting password" });
+            }
+            return res.json({ success: true, message: "Password reset successfully" });
+        });
+    } catch (error) {
+        return res.status(400).json({ success: false, message: "Invalid or expired token" });
+    }
+});
 
 // Logout
 router.get('/logout', (req, res) => {

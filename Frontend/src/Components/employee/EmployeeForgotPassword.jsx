@@ -2,13 +2,13 @@ import { useState } from 'react';
 import axios from 'axios';
 import '../style.css';
 
-const ForgotPassword = () => {
+const EmployeeForgotPassword = () => {
     const [email, setEmail] = useState('');
     const [message, setMessage] = useState('');
 
     const handleSubmit = (event) => {
         event.preventDefault();
-        axios.post('http://localhost:3000/auth/forgot_password', { email })
+        axios.post('http://localhost:3000/auth/employee_forgot_password', { email })
             .then(response => setMessage(response.data.message))
             .catch(error => {
                 if (error.response) {
@@ -36,4 +36,4 @@ const ForgotPassword = () => {
     );
 };
 
-export default ForgotPassword;
+export default EmployeeForgotPassword;

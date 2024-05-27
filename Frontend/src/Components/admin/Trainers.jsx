@@ -1,10 +1,9 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link} from "react-router-dom";
 
 const Trainers = () => {
   const [trainers, setTrainers] = useState([]);
-  const navigate = useNavigate();
   
   useEffect(() => {
     axios.get('http://localhost:3000/auth/trainers')
