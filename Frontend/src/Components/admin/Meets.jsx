@@ -19,11 +19,12 @@ const Meets = () => {
       .catch(err => console.log(err));
   }, []);
 
-  const handleDelete = (id) => {
-    axios.delete(`http://localhost:3000/auth/delete_meets/${id}`)
+  const handleDelete = (mid) => {
+    debugger;
+    axios.delete(`http://localhost:3000/auth/delete_meets/`+mid)
       .then(result => {
         if (result.data.Status) {
-          navigate('/dashboard/meets');
+          setMeets(prevMeets => prevMeets.filter(meet => meet.mid !== mid));
         } else {
           alert(result.data.Error);
         }

@@ -335,9 +335,12 @@ router.put('/edit_trainers/:id', async (req, res) => {
 
 router.delete('/delete_trainers/:id', async (req, res) => {
     try {
+        console.log(req.params.id);
         const id = req.params.id;
+        await EmployeeTrainer.destroy({ where:{ trainer_id: id}});
         const trainer = await Trainer.findByPk(id);
-        
+        //Duhet me u fshi se pari krejt rreshtat qe jane tek tabelat tjera qe e permbajne Id ekesaj tabele p.sh
+        //Para se me fshi ne tabelen Trainers ju duheni me fshi ne tabelen Employee_Trainers
         if (!trainer) {
             return res.json({ Status: false, Error: "Trainer not found" });
         }
@@ -350,9 +353,11 @@ router.delete('/delete_trainers/:id', async (req, res) => {
 
 router.delete('/delete_meets/:mid', async (req, res) => {
     try {
+        console.log(req.params.mid);
         const mid = req.params.mid;
-        const meet = await Meet.findByPk(id);
-        
+        await EmployeeMeet.destroy({ where:{ meet_id: mid}});
+        const meet = await Meet.findByPk(mid);
+ 
         if (!meet) {
             return res.json({ Status: false, Error: "Meeting not found" });
         }
