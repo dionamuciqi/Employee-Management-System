@@ -1,16 +1,15 @@
-import { useContext } from 'react';
-import { Navigate } from 'react-router-dom';
+// eslint-disable-next-line no-unused-vars
+import React from 'react'
+import { Navigate } from 'react-router-dom'
 import PropTypes from 'prop-types';
-import { AuthContext } from '../../AuthContext';
 
-const PrivateRoute = ({ children }) => {
-  const { auth } = useContext(AuthContext);
+const PrivateRoute = ({children}) => {
+  return localStorage.getItem("valid") ? children : <Navigate to="/"/>
+}
 
-  return auth.isAuthenticated ? children : <Navigate to="/adminlogin" />;
-};
 
 PrivateRoute.propTypes = {
-  children: PropTypes.node.isRequired,
-};
-
-export default PrivateRoute;
+    children: PropTypes.node.isRequired 
+  };
+  
+export default PrivateRoute

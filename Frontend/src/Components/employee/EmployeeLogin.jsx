@@ -1,11 +1,13 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { AuthContext } from '../../AuthContext';
 import { useFormik } from 'formik';
 import * as Yup from 'yup';
-import '../style.css';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import '../style.css';
 
 const EmployeeLogin = () => {
+  const { setAuth } = useContext(AuthContext); 
   const [error, setError] = useState(null);
   const navigate = useNavigate();
   axios.defaults.withCredentials = true;
@@ -24,6 +26,7 @@ const EmployeeLogin = () => {
         .then(result => {
           if (result.data.loginStatus) {
             localStorage.setItem("valid", true);
+            setAuth({ isAuthenticated: true }); 
             navigate('/employeedashboard/employeeprofile');
           } else {
             setError(result.data.Error);
@@ -38,7 +41,7 @@ const EmployeeLogin = () => {
   });
 
   const handleBackToStart = () => {
-    navigate('/'); 
+    navigate('/');
   }
 
   return (
