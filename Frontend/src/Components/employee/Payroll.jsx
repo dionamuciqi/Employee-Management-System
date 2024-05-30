@@ -38,7 +38,6 @@ const Payroll = () => {
                   <li className="list-group-item d-flex justify-content-between align-items-center" key={payroll.id}>
                     <div>
                       <h5 className="mb-1">Amount: {payroll.amount}</h5>
-                      <p className="mb-0">Employee ID: {payroll.employeeId}</p>
                     </div>
                   </li>
                 ))}

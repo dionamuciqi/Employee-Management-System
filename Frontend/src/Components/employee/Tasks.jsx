@@ -37,8 +37,7 @@ const Tasks = () => {
                 {tasks.map(task => (
                   <li className="list-group-item d-flex justify-content-between align-items-center" key={task.id}>
                     <div>
-                      <h5 className="mb-1">Task: {task.description}</h5>
-                      <p className="mb-0">Employee ID: {task.employeeId}</p>
+                      <h5 className="mb-1">Work Order: {task.description}</h5>
                     </div>
                   </li>
                 ))}

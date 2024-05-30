@@ -37,8 +37,7 @@ const Benefits = () => {
                 {benefits.map(benefit => (
                   <li className="list-group-item d-flex justify-content-between align-items-center" key={benefit.id}>
                     <div>
-                      <h5 className="mb-1">Amount: {benefit.amount}</h5>
-                      <p className="mb-0">Employee ID: {benefit.employeeId}</p>
+                      <h5 className="mb-1"> Bonuses <h6>{benefit.amount}%</h6></h5>
                     </div>
                   </li>
                 ))}
