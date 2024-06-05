@@ -5,7 +5,6 @@ import { useParams } from 'react-router-dom';
 const EmployeeMeeting = () => {
   const [meetings, setMeetings] = useState([]);
   const { emid } = useParams(); // Use 'id' to get the employee ID
-  // This line is valid if the employee ID is in the URL
 
   useEffect(() => {
     axios.get(`http://localhost:3000/employee/meetings`)
