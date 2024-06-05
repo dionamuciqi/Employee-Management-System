@@ -90,5 +90,5 @@ sequelize.sync()
     .catch(err => {
         console.error('Unable to synchronize the database:', err);
     });
-
+//albinaa
 export default app;
